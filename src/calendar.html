@@ -1,0 +1,76 @@
+<div class="calendar">
+  <div class="calender--input-wrapper" [ngClass]="{'calender--input-alignment': verticalInputAlignment}">
+      <div class="calender__input js-calenderFromTime">
+        <label>Select From Time</label>
+        <input type="text" readonly (click)="fromDateClicked()"  [value]="rangeSelected.from.date | date: dateDisplayFormat" class="calender--input" placeholder="From Time"/>
+      </div>
+      <div class="calender__input js-calenderToTime">
+        <label>Select To Time</label>
+        <input type="text" readonly (click)="toDateClicked()" class="calender--input" [value]="rangeSelected.to.date | date: dateDisplayFormat" placeholder="To Time"/>
+      </div>
+    </div>
+  <div [hidden]="calenderHideFlag" class="calendar__wrapper calender--triangle" [ngStyle]="{'width': ''+ defaultCalenderWidth*monthToShow +'px','top': calenderPosition.top+'px','left': calenderPosition.left+'px'}" [ngClass]="{'calendar__no-grid': !gridLayout,'calendar__disable-dropdown': disableYearMonthDropdown}">
+    <div class="container calendar__heading calendar--full-width">
+      <div class="calendar--full-width">
+        <div class="calendar__arrow-left">
+          <button type="button" [disabled]="(selectYearDropdown <= startYear) && (selectMonthDropdown === 0)" class="btn calendar--button" (click)='setPrevMonth()'><i></i></button>
+        </div>
+        <div class="calendar__month" *ngIf="!disableYearMonthDropdown">
+          <div class="custom-select">
+            <select  [(ngModel)]="selectMonthDropdown" (change)="monthChange($event.target.value)">
+              <option *ngFor="let month of months" [value]="month.value">{{month.text}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="calendar__year" *ngIf="!disableYearMonthDropdown">
+          <div class="custom-select">
+            <select [(ngModel)]="selectYearDropdown" (change)="yearChange($event.target.value)">
+              <option *ngFor="let year of years" [value]="year">{{year}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="calendar__arrow-right">
+            <button type="button" class="btn calendar--button" [disabled]="(selectYearDropdown >= maxYear) && (selectMonthDropdown === 11)" (click)='setNextMonth()'> <i></i></button>
+        </div>
+      </div>
+    </div>
+    <div (mouseleave) ="closeCalender($event)" class="calendar__container ">
+      <table class="table-bordered calendar__table calendar--full-width" *ngFor="let year of noOfCalenderView" [ngStyle]="{'width': ''+ individualCalendarWidth +'%','font-size': fontSize+'px'}">
+        <thead>
+          <tr>
+            <th colspan="7" class="calendar__table--date">{{year | ng4CalendarDateFromat}}</th>
+          </tr>
+          <tr>
+            <th *ngFor="let day of defaultDays" class="text-center">{{day}}</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let days of dateObj[year]">
+              <td *ngFor="let day of days;let i = index" [ngClass]="{'disabled':day.isDisabled,'current-day':day.isCurrent,'selected-date':day.isSelected,'continue-date': day.isHovered,'cell-stripe': day.isDateRangeExceeded}">
+                <div *ngIf="day.day" class="calender-tooltip" (click)="!day.isDisabled && dateClicked(day)" (mouseover)='datehovered(day)'>
+                  <div class="text-center monthly-date" [ngStyle]="{'width': individualCalendarCellWidth+'px'}">
+                    <span>{{day.day}}</span>
+
+                    <!-- tooltip -->
+                    <div [hidden]="!day.isDateRangeExceeded" class="calender-tooltiptext calender-tooltip-bottom">
+                      <!-- <div class="cal-tooltip-anomaly" ng-if="day.anomalyCount">
+                        <div class="cal-tooltip-anomaly__container">
+                          <div class="cal-tooltip-anomaly--heading">Anomaly Count :</div>
+                          <div class="cal-tooltip-anomaly--value">{{day.anomalyCount}}</div>
+                        </div>
+                        <div class="cal-tooltip-anomaly__container">
+                          <div class="cal-tooltip-anomaly--heading">Anomaly Score :</div>
+                          <div class="cal-tooltip-anomaly--value">{{day.anomalyScore}}</div>
+                        </div>
+                      </div> -->
+                      <div *ngIf="day.isDateRangeExceeded" class="calender-tooltip--no-selection">Max Date Range Selection allowed upto {{maximumDayInRange}} days</div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<div>

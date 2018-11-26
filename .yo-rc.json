@@ -1,14 +1,14 @@
 {
   "generator-angular-library": {
     "githubUsername": "tanoy009",
-    "githubRepoName": "ng4-geoautocomplete",
-    "npmModuleName": "ng4-geoautocomplete",
+    "githubRepoName": "ng4-calendar",
+    "npmModuleName": "ng4-calendar",
     "allowNg4InModuleName": true,
-    "moduleGlobal": "ng4Geoautocomplete",
-    "ngModuleName": "Ng4GeoautocompleteModule",
-    "selectorPrefix": "ng4Geoautocomplete",
-    "projectTitle": "Angular 4 compatable google autocomplete with AOT",
-    "projectDescription": "angular 4 compatable google autocomplete with server side api support and AOT enabled",
+    "moduleGlobal": "ng4Calendar",
+    "ngModuleName": "Ng4CalendarModule",
+    "selectorPrefix": "ng4Calendar",
+    "projectTitle": "angular 4 compatable multi purpose calendar and AOT enabled",
+    "projectDescription": "angular 4 compatable multi purpose calendar and AOT enabled",
     "authorName": "tanoy kumar maity"
   }
 }

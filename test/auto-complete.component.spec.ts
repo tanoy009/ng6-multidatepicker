@@ -4,14 +4,14 @@ import {
   TestBed
 } from '@angular/core/testing';
 import { expect } from 'chai';
-import { Ng4GeoautocompleteModule } from '../src';
+import { Ng4CalendarModule } from '../src';
 
 describe('ng4geo-autocomplete component', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        Ng4GeoautocompleteModule.forRoot()
+        Ng4CalendarModule.forRoot()
       ]
     });
   });

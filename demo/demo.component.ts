@@ -1,7 +1,7 @@
 ﻿import { Component } from '@angular/core';
 
 @Component({
-  selector: 'ng2geo-autocomplete-demoapp',
+  selector: 'ng4multi-calendar-demoapp',
   templateUrl: './demo/demo.component.html'
 })
 export class DemoComponent {
@@ -60,15 +60,11 @@ export class DemoComponent {
     recentStorageName: 'componentData5'
   };
 
-  constructor() {
-    setTimeout(() => {
-      this.userSettings3['inputPlaceholderText'] = 'This is delayed test';
-      this.userSettings3 = Object.assign({}, this.userSettings3);
-    }, 5000);
-    setTimeout(() => {
-      this.userSettings3['inputString'] = 'Bangalore, karnataka';
-      this.userSettings3 = Object.assign({}, this.userSettings3);
-    }, 10000);
+  constructor() {}
+
+  datecall(event: any) {
+    console.log('date selected');
+    console.log(event);
   }
 
   getCodeHtml(data: any): any {

@@ -1,14 +1,14 @@
 ﻿# Angular 4 compatible google autocomplete
-[![Build Status](https://travis-ci.org/tanoy009/ng4-geoautocomplete.svg?branch=master)](https://travis-ci.org/tanoy009/ng4-geoautocomplete)
-[![codecov](https://codecov.io/gh/tanoy009/ng4-geoautocomplete/branch/master/graph/badge.svg)](https://codecov.io/gh/tanoy009/ng4-geoautocomplete)
-[![npm version](https://badge.fury.io/js/ng4-geoautocomplete.svg)](http://badge.fury.io/js/ng4-geoautocomplete)
-[![devDependency Status](https://david-dm.org/tanoy009/ng4-geoautocomplete/dev-status.svg)](https://david-dm.org/tanoy009/ng4-geoautocomplete?type=dev)
-[![GitHub issues](https://img.shields.io/github/issues/tanoy009/ng4-geoautocomplete.svg)](https://github.com/tanoy009/ng4-geoautocomplete/issues)
-[![GitHub stars](https://img.shields.io/github/stars/tanoy009/ng4-geoautocomplete.svg)](https://github.com/tanoy009/ng4-geoautocomplete/stargazers)
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/tanoy009/ng4-geoautocomplete/master/LICENSE)
+[![Build Status](https://travis-ci.org/tanoy009/ng4-calendar.svg?branch=master)](https://travis-ci.org/tanoy009/ng4-calendar)
+[![codecov](https://codecov.io/gh/tanoy009/ng4-calendar/branch/master/graph/badge.svg)](https://codecov.io/gh/tanoy009/ng4-calendar)
+[![npm version](https://badge.fury.io/js/ng4-calendar.svg)](http://badge.fury.io/js/ng4-calendar)
+[![devDependency Status](https://david-dm.org/tanoy009/ng4-calendar/dev-status.svg)](https://david-dm.org/tanoy009/ng4-calendar?type=dev)
+[![GitHub issues](https://img.shields.io/github/issues/tanoy009/ng4-calendar.svg)](https://github.com/tanoy009/ng4-calendar/issues)
+[![GitHub stars](https://img.shields.io/github/stars/tanoy009/ng4-calendar.svg)](https://github.com/tanoy009/ng4-calendar/stargazers)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/tanoy009/ng4-calendar/master/LICENSE)
 
 ## Demo
-https://tanoy009.github.io/ng4-geoautocomplete/
+https://tanoy009.github.io/ng4-calendar/
 
 ## Test Case.
 In Pipeline will be updated in a while.
@@ -29,26 +29,21 @@ angular 4 compatible google autocomplete with server side api support and AOT en
 
 Install through npm:
 ```
-npm install --save ng4-geoautocomplete
+npm install --save ng4-calendar
 ```
 
 Then include in your apps module:
 
 ```typescript
 import { Component, NgModule } from '@angular/core';
-import { Ng4GeoautocompleteModule } from 'ng4-geoautocomplete';
+import { Ng4CalendarModule } from 'ng4-calendar';
 
 @NgModule({
   imports: [
-    Ng4GeoautocompleteModule.forRoot()
+    Ng4CalendarModule.forRoot()
   ]
 })
 export class MyModule {}
-```
-Add google place script in your main file generally referred to 'index.html' (Optional if you want to use google services).
-
-```
-<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true&key=XXReplace this with valid keyXX&libraries=places&language=en-US"></script>
 ```
 
 Finally use in one of your apps components:

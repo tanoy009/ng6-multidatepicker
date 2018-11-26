@@ -1,0 +1,415 @@
+.calendar * {
+    font-family: sans-serif;
+}
+
+.calendar {
+    background-color: #fff;
+    width: 50%;
+    min-width: 352px;
+    position: relative;
+}
+
+.calendar--full-width {
+    width: 100%;
+    display: flex;
+}
+
+.calendar__container {
+  display: flex;
+}
+
+.calendar__wrapper {
+  box-shadow: 0 0 2px #ccc;
+  background-color: #fff;
+  padding: 10px 8px 8px 8px;
+  position: absolute;
+}
+
+.calendar--button {
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: 1px solid #ccc;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.calendar--button:focus {
+  outline: none;
+}
+
+.calendar button[disabled] {
+    background-color: #ccc;
+    border-color: #ccc;
+}
+
+.calender--triangle:before,
+.calender--triangle:after {
+  content: "";
+  border-style: solid;
+  position: absolute;
+  width: 0;
+  height: 0;
+  left: 10px;
+  border-radius: 1px;
+}
+
+.calender--triangle:before {
+  border-width: 0px 11px 11px 11px;
+  border-color: transparent transparent #ccc transparent;
+  top: -11px;
+}
+
+.calender--triangle:after {
+  border-width: 0px 11px 11px 11px;
+  top: -10px;
+  border-color: transparent transparent #fff transparent;
+}
+
+.calendar__arrow-left {
+    width: 50px;
+    height: 40px;
+}
+
+.calendar__arrow-left i {
+    background-image: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCA0OTIgNDkyIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA0OTIgNDkyOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjE2cHgiIGhlaWdodD0iMTZweCI+CjxnPgoJPGc+CgkJPHBhdGggZD0iTTE5OC42MDgsMjQ2LjEwNEwzODIuNjY0LDYyLjA0YzUuMDY4LTUuMDU2LDcuODU2LTExLjgxNiw3Ljg1Ni0xOS4wMjRjMC03LjIxMi0yLjc4OC0xMy45NjgtNy44NTYtMTkuMDMybC0xNi4xMjgtMTYuMTIgICAgQzM2MS40NzYsMi43OTIsMzU0LjcxMiwwLDM0Ny41MDQsMHMtMTMuOTY0LDIuNzkyLTE5LjAyOCw3Ljg2NEwxMDkuMzI4LDIyNy4wMDhjLTUuMDg0LDUuMDgtNy44NjgsMTEuODY4LTcuODQ4LDE5LjA4NCAgICBjLTAuMDIsNy4yNDgsMi43NiwxNC4wMjgsNy44NDgsMTkuMTEybDIxOC45NDQsMjE4LjkzMmM1LjA2NCw1LjA3MiwxMS44Miw3Ljg2NCwxOS4wMzIsNy44NjRjNy4yMDgsMCwxMy45NjQtMi43OTIsMTkuMDMyLTcuODY0ICAgIGwxNi4xMjQtMTYuMTJjMTAuNDkyLTEwLjQ5MiwxMC40OTItMjcuNTcyLDAtMzguMDZMMTk4LjYwOCwyNDYuMTA0eiIgZmlsbD0iIzAwMDAwMCIvPgoJPC9nPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo=);
+    background-size: cover;
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+}
+
+.calendar__arrow-right {
+    width: 50px;
+    height: 40px;
+}
+
+.calendar__arrow-right i {
+    background-image: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCA0OTIuMDA0IDQ5Mi4wMDQiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDQ5Mi4wMDQgNDkyLjAwNDsiIHhtbDpzcGFjZT0icHJlc2VydmUiIHdpZHRoPSIxNnB4IiBoZWlnaHQ9IjE2cHgiPgo8Zz4KCTxnPgoJCTxwYXRoIGQ9Ik0zODIuNjc4LDIyNi44MDRMMTYzLjczLDcuODZDMTU4LjY2NiwyLjc5MiwxNTEuOTA2LDAsMTQ0LjY5OCwwcy0xMy45NjgsMi43OTItMTkuMDMyLDcuODZsLTE2LjEyNCwxNi4xMiAgICBjLTEwLjQ5MiwxMC41MDQtMTAuNDkyLDI3LjU3NiwwLDM4LjA2NEwyOTMuMzk4LDI0NS45bC0xODQuMDYsMTg0LjA2Yy01LjA2NCw1LjA2OC03Ljg2LDExLjgyNC03Ljg2LDE5LjAyOCAgICBjMCw3LjIxMiwyLjc5NiwxMy45NjgsNy44NiwxOS4wNGwxNi4xMjQsMTYuMTE2YzUuMDY4LDUuMDY4LDExLjgyNCw3Ljg2LDE5LjAzMiw3Ljg2czEzLjk2OC0yLjc5MiwxOS4wMzItNy44NkwzODIuNjc4LDI2NSAgICBjNS4wNzYtNS4wODQsNy44NjQtMTEuODcyLDcuODQ4LTE5LjA4OEMzOTAuNTQyLDIzOC42NjgsMzg3Ljc1NCwyMzEuODg0LDM4Mi42NzgsMjI2LjgwNHoiIGZpbGw9IiMwMDAwMDAiLz4KCTwvZz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K);
+    background-size: cover;
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+}
+
+.calendar__month {
+    width: calc(50% - 50px);
+}
+
+.calendar__year {
+    width: calc(50% - 50px);
+}
+
+.calendar .current-day .monthly-date {
+    color: blue;
+    font-weight: 700;
+}
+
+.calendar__heading {
+    padding: 0;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.calendar__table {
+    border-collapse: collapse;
+    display: table;
+    border-spacing: 0px;
+}
+
+.calendar__table td,
+.calendar__table th {
+    padding: 9px 0;
+    vertical-align: top;
+    border-top: 1px solid #eceeef;
+}
+
+
+.calendar__table thead {
+    display: table-header-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+
+.calendar__table tr {
+    display: table-row;
+    vertical-align: inherit;
+    border-color: inherit;
+}
+
+.calendar__table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #eceeef;
+}
+
+.calendar .table-bordered thead td,
+.calendar .table-bordered thead th {
+    border-bottom-width: 2px;
+}
+
+.calendar__table th {
+    font-size: 80%;
+}
+
+.calendar__table tbody td {
+    transition: all 0.3s ease-in-out;
+    line-height: 1;
+    padding: 0;
+    position: relative;
+}
+
+.calendar__table tbody {
+    display: table-row-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+
+.calendar__table tr {
+    display: table-row;
+    vertical-align: inherit;
+    border-color: inherit;
+}
+
+.calendar .table-bordered td,
+.calendar .table-bordered th {
+    border: 1px solid #eceeef;
+}
+
+.calendar__table tbody td:hover {
+    cursor: pointer;
+    background-color: #97f1ff;
+}
+
+.calendar__table tbody td:hover .monthly-date {
+    color: #353535;
+}
+
+.calendar__table--date {
+    font-size: 16px !important;
+    font-weight: 400;
+    line-height: 1.1;
+}
+
+.calendar__table .text-center {
+    text-align: center;
+}
+
+.calendar__table .price {
+    margin-top: 10px;
+}
+
+.calendar__table .price span,
+.calendar__table .quantity span {
+    width: 100%;
+    font-weight: 400;
+    opacity: 0.9;
+    font-size: 13px;
+}
+
+.calendar__table .monthly-date {
+    font-size: 76%;
+    font-weight: 400;
+    line-height: 1;
+    padding: 12px 0;
+}
+
+.calendar__table .monthly-date span {
+    display: inline-block;
+    transform: scale(1, 1.5);
+    -webkit-transform: scale(1, 1.5);
+    /* Safari and Chrome */
+    -moz-transform: scale(1, 1.5);
+    /* Firefox */
+    -ms-transform: scale(1, 1.5);
+    /* IE 9+ */
+    -o-transform: scale(1, 1.5);
+    /* Opera */
+}
+
+.calendar__table .continue-date {
+    background-color: #97f1ff;
+}
+
+.calendar__table .continue-date .monthly-date {
+    color: #047b8d;
+}
+
+.calendar__table .disabled {
+    cursor: not-allowed !important;
+    color: #bababa;
+}
+
+.calendar__table .disabled:hover {
+    background-color: transparent !important;
+}
+
+.calendar .custom-select {
+  border: 1px solid #ccc;
+}
+
+.calendar .custom-select select{
+  margin: 0;
+  width: 100%;
+  text-align: center;
+  text-align-last: center;
+  height: 38px;
+  font-size: 17px;
+  background: none;
+  border: none;
+}
+
+.calendar .selected-date {
+    background-color: #3dbfd3 !important;
+}
+
+.calendar .selected-date .monthly-date {
+    color: #fff !important;
+}
+
+.calender--input-wrapper {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.calender__input {
+  width: 50%;
+}
+
+.calender--input {
+  width: 100%;
+  height: 40px;
+  padding: 4px 8px;
+  margin-top: 8px;
+  box-sizing: border-box;
+}
+
+.calendar .cell-stripe {
+  background-image: repeating-linear-gradient(45deg, #dbdbdb, #dbdbdb 10px, #ecebeb 10px, #ecebeb 20px);
+}
+
+.calender--input-alignment {
+  flex-direction: column;
+}
+
+.calender--input-alignment .calender__input{
+  width: 100%;
+  margin: 10px 0;
+}
+
+/* css code for calendar tooltip */
+
+.calender-tooltip {
+  position: relative;
+  /*display: inline-block;*/
+}
+.calender-tooltip .calender-tooltiptext {
+  visibility: hidden;
+  position: absolute;
+  width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  font-size: 10px;
+  padding: 5px;
+  border-radius: 2px;
+  z-index: 1;
+  opacity: 0;
+  transition: all 0.3s;
+  transform: scale(1, 1);
+  -webkit-transform: scale(1, 1);
+  /* Safari and Chrome */
+  -moz-transform: scale(1, 1);
+  /* Firefox */
+  -ms-transform: scale(1, 1);
+  /* IE 9+ */
+  -o-transform: scale(1, 1);
+  /* Opera */
+}
+.calender-tooltip .calender-tooltip-bottom {
+  top: 135%;
+  left: 50%;
+  margin-left: -60px;
+}
+.calender-tooltip .calender-tooltip-bottom::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #555 transparent;
+}
+.calender-tooltip:hover .calender-tooltiptext {
+  visibility: visible;
+  opacity: 1;
+  top: 117%;
+}
+
+
+/* css code to remove the grid to give the militaristic feel */
+.calendar__no-grid .calendar__table {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.calendar__no-grid .calendar__table{
+  border-spacing: 0px;
+}
+.calendar__no-grid tr td{
+  border: none !important;
+}
+
+.calendar__no-grid thead tr th{
+  border-bottom-width: 1px !important;
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-right-width: 0px;
+}
+
+.calendar__disable-dropdown .calendar__heading {
+  margin: 0;
+}
+
+.calendar__disable-dropdown.calendar__no-grid .calendar--button {
+  border: none !important;
+}
+
+/* css code to restructure whhen dropdowns are removed */
+.calendar__disable-dropdown.calendar__no-grid {
+  padding: 2px 8px 8px 8px;
+}
+.calendar__disable-dropdown .calendar__arrow-left {
+  position: absolute;
+  left: 0;
+  top: 2px;
+  height: 35px;
+  width: 42px;
+}
+
+.calendar__disable-dropdown.calendar__no-grid .calendar__arrow-left,
+.calendar__disable-dropdown.calendar__no-grid .calendar__arrow-right {
+  top: 0;
+}
+
+.calendar__disable-dropdown .calendar__arrow-right {
+  position: absolute;
+  right: 0;
+  top: 2px;
+  height: 35px;
+  width: 42px;
+}
+
+.calendar__disable-dropdown .calendar__arrow-left .calendar--button {
+  border: none;
+  border-right: 1px solid #eceeef;
+}
+
+.calendar__disable-dropdown .calendar__arrow-right .calendar--button {
+  border: none;
+  border-left: 1px solid #eceeef;
+}
+
+

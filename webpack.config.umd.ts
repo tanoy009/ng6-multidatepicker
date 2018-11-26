@@ -8,14 +8,14 @@ const pkg = JSON.parse(fs.readFileSync('./package.json').toString());
 
 export default {
   entry: {
-    'ng4-geoautocomplete.umd': path.join(__dirname, 'src', 'index.ts'),
-    'ng4-geoautocomplete.umd.min': path.join(__dirname, 'src', 'index.ts'),
+    'ng4-calendar.umd': path.join(__dirname, 'src', 'index.ts'),
+    'ng4-calendar.umd.min': path.join(__dirname, 'src', 'index.ts'),
   },
   output: {
     path: path.join(__dirname, 'dist', 'bundles'),
     filename: '[name].js',
     libraryTarget: 'umd',
-    library: 'ng4Geoautocomplete'
+    library: 'ng4Calendar'
   },
   externals: [
     angularExternals(),
