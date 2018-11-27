@@ -1,7 +1,9 @@
 ﻿import { Component, PLATFORM_ID, Inject, Input, Output, EventEmitter, OnInit, OnChanges, ElementRef } from '@angular/core';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
+import { DomSanitizer } from '@angular/platform-browser';
 import { GlobalRef } from './windowRef.service';
 import { CalendarService } from './calendar.service';
+import { Observable } from 'rxjs';
 
 export interface Settings {
   geoPredictionServerUrl?: string;
@@ -33,7 +35,7 @@ export interface Settings {
   templateUrl: './src/calendar.html',
   styleUrls: ['./src/calendar.css'],
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit,OnChanges {
   @Input() minDate?: any;                                   //In Format MM/DD/YYYY as string or a Date object or time in millisecond; (STRICT) (Default is current system date)
   @Input() maxDate?: any;                                 //In Format MM/DD/YYYY as string or a Date object or time in millisecond; (STRICT) (Default is 20 years from current system date)
 	@Input() monthToShow?: number = 2;                      //Number of months to be visible in the UI (Default: 1)
@@ -41,12 +43,16 @@ export class CalendarComponent implements OnInit {
 	@Input() enableRangeSelect?: boolean = true;            //Number of months to be visible in the UI Horizontally (Default: 1)
 	@Input() fontSize?: number = 14;                        //Number of months to be visible in the UI Horizontally (Default: 1)
   @Input() maximumDayInRange?: number = 10                //If range is selected then the maximum range to which the user can select.
-  @Input() gridLayout?: boolean = false                   //If Grid layout for the calendar (Default: true)
+  @Input() gridLayout?: boolean = true                   //If Grid layout for the calendar (Default: true)
   @Input() disableYearMonthDropdown: boolean = false;     //We can disable the Year and month dropdown accoording to the need (Default: false)
   @Input() verticalInputAlignment: boolean = false;       //Vertical alignment of the two input box (Default: false)
   @Input() dateDisplayFormat: string = 'EEEE, MMM d, y';  //Any kind of date format will work i.e supported my native angular date filter pipe
+  @Input() isExternalDataAvailable: boolean = true;
+  @Input() promiseData?: Observable<any>;
   @Output()
-	dateCallback: EventEmitter<any> = new EventEmitter<any>();
+  externalDateCallback: EventEmitter<any> = new EventEmitter<any>();
+  @Output()
+  dateCallback: EventEmitter<any> = new EventEmitter<any>();
 	public _appConstant: any = {
     days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     months: [{
@@ -105,6 +111,8 @@ export class CalendarComponent implements OnInit {
   public calenderPosition = {top: 0,left:0};
   public defaultCalenderWidth = 336;
   public individualCalendarCellWidth = 45;
+  public individualCalendarCellHeight = 35;
+  externalData: any = {};
 	selectMonthDropdown: number = 0;
 	selectYearDropdown: number = 0;
 	currentDate: any = new Date();
@@ -115,9 +123,10 @@ export class CalendarComponent implements OnInit {
 	startMonth: number = this.currentMonth;
 	startYear: number = this.currentYear;
 	noOfCalenderView: any = [];
-	constructor(private _elmRef: ElementRef) {}
+	constructor(private _elmRef: ElementRef, private sanitizer: DomSanitizer) {}
 
 	ngOnInit(): any {
+
     //check if monthTOShow should be equal or more then 1
     if(this.monthToShow < 0) {
       this.monthToShow = 1;
@@ -163,7 +172,18 @@ export class CalendarComponent implements OnInit {
 		//below code generate year dropdown and also generate initial calendar
 		this.generateYears(this.minYear, this.maxYear);
 		this.generateInitialCalander(this.monthToShow, this.startMonth, this.startYear);
-	}
+  }
+
+  ngOnChanges(changes:any):void {
+    if(this.isExternalDataAvailable && changes.promiseData && changes.promiseData.currentValue) {
+      this.promiseData.subscribe(data =>{
+        console.log("in subscribe Data");
+        console.log(data);
+        this.externalData = data;
+        this.integrateAsyncDataWithCurrentView();
+      })
+    }
+  }
 
 	public generateYears(minYear: number, maxYear: number): void {
 		this.years = [];
@@ -248,10 +268,17 @@ export class CalendarComponent implements OnInit {
 			'isCurrent': this.isCurrentDate(dayNumber, month, year),
 			'isSelected': false,
       'isHovered': false,
-      'isDateRangeExceeded': false
+      'isDateRangeExceeded': false,
+      'data': {
+        'key': '',
+        'value': 0,
+        'color': '',
+        'additionalTooltipMsg': ''
+      }
     };
     _dayObj.isDisabled = !this.dateValidityCheck(_startDate, _endDate, _dayObj);
     _dayObj.isDateRangeExceeded = this.isInDateRange(_dayObj);
+    _dayObj = this.setExternalDataWithEachDayObj(_dayObj);
 		return _dayObj;
 	}
 
@@ -505,9 +532,43 @@ export class CalendarComponent implements OnInit {
     }
   }
 
+  integrateAsyncDataWithCurrentView() {
+    console.log('in integrated');
+    console.log(this.externalData);
+    if(this.dateObj) {
+      for (let key in this.dateObj) {
+        if (this.dateObj.hasOwnProperty(key)) {
+          let monthObj = this.dateObj[key];
+          monthObj.forEach((weekObj) => {
+            weekObj.forEach((dayObj) => {
+              console.log(dayObj);
+              dayObj = this.setExternalDataWithEachDayObj(dayObj);
+            })
+          })
+        }
+      }
+    }
+    console.log(this.dateObj);
+  }
+
+  setExternalDataWithEachDayObj(dayObj) {
+    if((typeof(this.externalData) == 'object') && this.externalData[dayObj.year]) {
+      var year = dayObj.year;
+      var month = dayObj.month;
+      var day = dayObj.day;
+      dayObj.anomalyLoading = false;
+      dayObj.data.key = this.externalData[year] ? (this.externalData[year][month] ? (this.externalData[year][month][day] ? this.externalData[year][month][day].key: '') : '') : '';
+      dayObj.data.value = this.externalData[year] ? (this.externalData[year][month] ? (this.externalData[year][month][day] ? this.externalData[year][month][day].value : 0) : 0) : 0;
+      dayObj.data.color = this.externalData[year] ? (this.externalData[year][month] ? (this.externalData[year][month][day] ? this.externalData[year][month][day].color : '') : '') : '';
+      dayObj.data.additionalTooltipMsg = this.externalData[year] ? (this.externalData[year][month] ? (this.externalData[year][month][day] ? (this.externalData[year][month][day].additionalTooltipMsg ? this.sanitizer.bypassSecurityTrustHtml(this.externalData[year][month][day].additionalTooltipMsg) :'') : '') : '') : '';
+      // dayObj.scale = scope.scaleAnomalyData(dayObj.anomalyCount, dayObj.anomalyScore, year);
+    }
+    return dayObj;
+  }
+
   fromDatePopupOpenCoords(){
     var coords = this._elmRef.nativeElement.querySelector('.js-calenderFromTime').getBoundingClientRect();
-    if(this.verticalInputAlignment) {
+    if(this.verticalInputAlignment || !this.enableRangeSelect) {
       this.calenderPosition = {'top':coords.height + 20,'left':0};
     }else {
       this.calenderPosition = {'top':coords.height + 10,'left':0};
@@ -523,6 +584,14 @@ export class CalendarComponent implements OnInit {
     }else {
       this.calenderPosition = {'top':coords.height+ 10,'left':coordsFrom.width + 2};
     }
+  }
+
+
+  singleDateClicked(): void {
+    this.fromDatePopupOpenCoords();
+    this.calenderHideFlag = false;
+    this.fromTimeClicked = false;
+    this.toTimeClicked = false;
   }
 
   fromDateClicked(): void {
@@ -549,7 +618,25 @@ export class CalendarComponent implements OnInit {
   }
 
   componentCallback(): void {
-    console.log('in component callback');
-    console.log(this.rangeSelected);
+    // console.log('in component callback');
+    // console.log(this.rangeSelected);
+    let _sendData: any = {};
+    _sendData.dates = this.rangeSelected;
+    _sendData.isNewDataNeeded = false;
+    // console.log(this.dateObj);
+    if(this.isExternalDataAvailable) {
+      let years = [];
+      for (var key in this.dateObj) {
+        if (this.dateObj.hasOwnProperty(key)) {
+          let _year = key.split('-')[0];
+          if(years.indexOf(_year)<0) {
+            years.push(_year);
+          }
+        }
+      }
+      _sendData.yearDataNeeded = years;
+      _sendData.isNewDataNeeded = true;
+    }
+    this.dateCallback.emit(_sendData);
   }
 }

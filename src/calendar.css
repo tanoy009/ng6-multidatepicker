@@ -213,7 +213,12 @@
     font-size: 76%;
     font-weight: 400;
     line-height: 1;
-    padding: 12px 0;
+    padding: 5px 0;
+    height: 35px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
 }
 
 .calendar__table .monthly-date span {
@@ -229,6 +234,22 @@
     /* Opera */
 }
 
+.calendar__table .monthly-date-val {
+  font-size: 10px;
+  overflow: hidden;
+  width: 100%;
+  text-overflow: ellipsis;
+  transform: scale(1, 1) !important;
+    -webkit-transform: scale(1, 1) !important;
+    /* Safari and Chrome */
+    -moz-transform: scale(1, 1) !important;
+    /* Firefox */
+    -ms-transform: scale(1, 1) !important;
+    /* IE 9+ */
+    -o-transform: scale(1, 1) !important;
+    /* Opera */
+}
+
 .calendar__table .continue-date {
     background-color: #97f1ff;
 }
@@ -239,7 +260,7 @@
 
 .calendar__table .disabled {
     cursor: not-allowed !important;
-    color: #bababa;
+    color: #949494;
 }
 
 .calendar__table .disabled:hover {
@@ -347,6 +368,13 @@
   visibility: visible;
   opacity: 1;
   top: 117%;
+}
+
+.calender-tooltip .calender-tooltip--separator {
+  padding-bottom: 5px;
+  border-bottom: 1px solid #fff;
+  width: 70px;
+  margin: 0 auto 5px auto;
 }
 
 

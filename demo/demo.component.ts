@@ -1,4 +1,5 @@
 ﻿import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'ng4multi-calendar-demoapp',
@@ -12,6 +13,7 @@ export class DemoComponent {
   public componentData5: any = '';
   public componentData6: any = '';
   public componentData7: any = '';
+  public ObservableObj: Observable<any>;
   public userSettings2: any = {
     showRecentSearch: false,
     geoCountryRestriction: ['in'],
@@ -60,11 +62,51 @@ export class DemoComponent {
     recentStorageName: 'componentData5'
   };
 
-  constructor() {}
+  constructor() {
+    // this.test();
+  }
 
-  datecall(event: any) {
+  mockCalenderDataGenerator(year, noOfDays){
+    let _data = {};
+    for(let p = 0;p<year.length;p++) {
+      _data[year[p]] = {};
+      for(let i = 0;i<12;i++) {
+        _data[year[p]][i] = {};
+        for(let j = 1;j<noOfDays;j++) {
+            _data[year[p]][i][j]= {
+                'key': 'price',
+                'value': '$'+ Math.floor(Math.random() * 100) + 10,
+                'additionalTooltipMsg': '<div>This is</div><div>Test2</div>',
+                'color': j < 10 ? '#E62017'  : '#FD38AE'
+            }
+        }
+      }
+    }
+    return _data;
+  }
+  test(year) {
+    console.log("in test");
+    setTimeout(()=>{
+      console.log("after settimeout");
+      console.log(year);
+      this.ObservableObj = new Observable((observer) => {
+
+        // observable execution
+        let _mockData = this.mockCalenderDataGenerator(year, 25);
+        console.log("after exe");
+        observer.next(_mockData);
+        observer.complete();
+    })
+    }, 3000);
+  }
+
+
+  dateReturnCall(event: any) {
     console.log('date selected');
     console.log(event);
+    if(event && event.isNewDataNeeded) {
+      this.test(event.yearDataNeeded);
+    }
   }
 
   getCodeHtml(data: any): any {

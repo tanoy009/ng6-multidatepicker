@@ -1,12 +1,18 @@
 <div class="calendar">
-  <div class="calender--input-wrapper" [ngClass]="{'calender--input-alignment': verticalInputAlignment}">
+  <div class="calender--input-wrapper" [ngClass]="{'calender--input-alignment': verticalInputAlignment}" *ngIf="enableRangeSelect">
       <div class="calender__input js-calenderFromTime">
-        <label>Select From Time</label>
+        <label>Select From Date</label>
         <input type="text" readonly (click)="fromDateClicked()"  [value]="rangeSelected.from.date | date: dateDisplayFormat" class="calender--input" placeholder="From Time"/>
       </div>
       <div class="calender__input js-calenderToTime">
-        <label>Select To Time</label>
+        <label>Select To Date</label>
         <input type="text" readonly (click)="toDateClicked()" class="calender--input" [value]="rangeSelected.to.date | date: dateDisplayFormat" placeholder="To Time"/>
+      </div>
+    </div>
+    <div class="calender--input-wrapper calender--input-alignment" *ngIf="!enableRangeSelect">
+      <div class="calender__input js-calenderFromTime">
+        <label>Select  Date</label>
+        <input type="text" readonly (click)="fromDateClicked()"  [value]="userDateSelected.dateInMillisecond | date: dateDisplayFormat" class="calender--input" placeholder="From Time"/>
       </div>
     </div>
   <div [hidden]="calenderHideFlag" class="calendar__wrapper calender--triangle" [ngStyle]="{'width': ''+ defaultCalenderWidth*monthToShow +'px','top': calenderPosition.top+'px','left': calenderPosition.left+'px'}" [ngClass]="{'calendar__no-grid': !gridLayout,'calendar__disable-dropdown': disableYearMonthDropdown}">
@@ -50,19 +56,13 @@
                 <div *ngIf="day.day" class="calender-tooltip" (click)="!day.isDisabled && dateClicked(day)" (mouseover)='datehovered(day)'>
                   <div class="text-center monthly-date" [ngStyle]="{'width': individualCalendarCellWidth+'px'}">
                     <span>{{day.day}}</span>
+                    <span *ngIf="day.data.value" class="monthly-date-val" [ngStyle]="{'color': day.data.color}">{{day.data.value}}</span>
 
                     <!-- tooltip -->
-                    <div [hidden]="!day.isDateRangeExceeded" class="calender-tooltiptext calender-tooltip-bottom">
-                      <!-- <div class="cal-tooltip-anomaly" ng-if="day.anomalyCount">
-                        <div class="cal-tooltip-anomaly__container">
-                          <div class="cal-tooltip-anomaly--heading">Anomaly Count :</div>
-                          <div class="cal-tooltip-anomaly--value">{{day.anomalyCount}}</div>
-                        </div>
-                        <div class="cal-tooltip-anomaly__container">
-                          <div class="cal-tooltip-anomaly--heading">Anomaly Score :</div>
-                          <div class="cal-tooltip-anomaly--value">{{day.anomalyScore}}</div>
-                        </div>
-                      </div> -->
+                    <div [hidden]="!(day.isDateRangeExceeded || day.data.additionalTooltipMsg)" class="calender-tooltiptext calender-tooltip-bottom">
+
+                      <div *ngIf="day.data.additionalTooltipMsg" class="calender-tooltip--extra" [innerHTML]="day.data.additionalTooltipMsg"></div>
+                      <div *ngIf="day.isDateRangeExceeded && day.data.additionalTooltipMsg"class="calender-tooltip--separator"></div>
                       <div *ngIf="day.isDateRangeExceeded" class="calender-tooltip--no-selection">Max Date Range Selection allowed upto {{maximumDayInRange}} days</div>
                     </div>
                   </div>
