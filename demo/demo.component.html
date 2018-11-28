@@ -10,7 +10,7 @@
 		  		<code style="word-wrap: break-word;" [innerHTML]="getCodeHtml(userSettings7_1)"></code>
 		  	</div>-->
                 <div>
-                    <ng4multi-calendar [monthToShow]="3"(dateCallback)="dateCallback($event)" (externalDataCallback)="externalDataFetchCallback($event)" [promiseData]="ObservableObj"></ng4multi-calendar>
+                    <ng4multi-calendar (dateCallback)="dateCallback($event)" (externalDataCallback)="externalDataFetchCallback($event)" [promiseData]="ObservableObj"></ng4multi-calendar>
                 </div>
                 <!--<div class="well" style="float: left;width: 100%;margin-top: 20px;">
 		    	<p>Sample Output:</p>

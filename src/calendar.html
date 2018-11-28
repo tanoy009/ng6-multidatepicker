@@ -53,7 +53,7 @@
         <tbody>
             <tr *ngFor="let days of dateObj[year]">
               <td *ngFor="let day of days;let i = index" [ngClass]="{'disabled':day.isDisabled,'current-day':day.isCurrent,'selected-date':day.isSelected,'continue-date': day.isHovered,'cell-stripe': day.isDateRangeExceeded}">
-                <div *ngIf="day.day" class="calender-tooltip" (click)="!day.isDisabled && dateClicked(day)" (mouseover)='datehovered(day)'>
+                <div *ngIf="day.day" class="calender-tooltip" (click)="!day.isDisabled && dateClicked(day)" (mouseover)='dateHovered(day)'>
                   <div class="text-center monthly-date" [ngStyle]="{'width': uiSettings.individualCalendarCellWidth+'px','height': uiSettings.individualCalendarCellHeight+'px'}">
                     <span>{{day.day}}</span>
                     <span *ngIf="day.data.value" class="monthly-date-val" [ngStyle]="{'color': day.data.color}">{{day.data.value}}</span>
