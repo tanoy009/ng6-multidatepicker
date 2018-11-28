@@ -5,29 +5,29 @@ import { GlobalRef } from './windowRef.service';
 import { CalendarService } from './calendar.service';
 import { Observable } from 'rxjs';
 
-export interface Settings {
-  geoPredictionServerUrl?: string;
-  geoLatLangServiceUrl?: string;
-  geoLocDetailServerUrl?: string;
-  geoCountryRestriction?: any;
-  geoTypes?: any;
-  geoLocation?: any;
-  geoRadius?: number;
-  serverResponseListHierarchy?: any;
-  serverResponseatLangHierarchy?: any;
-  serverResponseDetailHierarchy?: any;
-  resOnSearchButtonClickOnly?: boolean;
-  useGoogleGeoApi?: boolean;
-  inputPlaceholderText?: string;
-  inputString?: string;
-  showSearchButton?: boolean;
-  showRecentSearch?: boolean;
-  showCurrentLocation?: boolean;
-  recentStorageName?: string;
-  noOfRecentSearchSave?: number;
-  currentLocIconUrl?: string;
-  searchIconUrl?: string;
-  locationIconUrl?: string;
+export interface  IuiSettings{
+  dateDisplayFormat: string,            //Any kind of date format will work i.e supported my native angular date filter pipe
+  gridLayout: boolean,                  //Grid layout for the calendar (Default: true)
+  disableYearMonthDropdown: boolean,    //We can disable the Year and month dropdown according to the need (Default: false)
+  verticalInputAlignment: boolean,      //Vertical alignment of the two input box (Default: false)
+  disableTooltip: boolean,              //Flag to disable the cell tooltip
+  monthToShow: number,                  //Number of months to be visible in the UI (Default: 2)
+  fontSize: number,                     //Font size of the date (Default: 14)
+  individualCalendarCellWidth: number,  //config to change the cell width
+  individualCalendarCellHeight: number, //config to change the cell height
+}
+
+export interface IdateObject {
+  'day': number,
+  'month': number,
+  'year' : number,
+  'dateInMillisecond': number,
+  'isDisabled': boolean,
+  'isCurrent': boolean,
+  'isSelected': boolean,
+  'isHovered': boolean,
+  'isDateRangeExceeded': boolean,
+  'data': any
 }
 
 @Component({
@@ -36,23 +36,29 @@ export interface Settings {
   styleUrls: ['./src/calendar.css'],
 })
 export class CalendarComponent implements OnInit,OnChanges {
-  @Input() minDate?: any;                                   //In Format MM/DD/YYYY as string or a Date object or time in millisecond; (STRICT) (Default is current system date)
+  @Input() uiSettings: IuiSettings = {
+    dateDisplayFormat: 'EEEE, MMM d, y',
+    gridLayout: true,
+    disableYearMonthDropdown: false,
+    verticalInputAlignment: false,
+    disableTooltip: false,
+    monthToShow: 2,
+    fontSize: 14,
+    individualCalendarCellWidth: 48,
+    individualCalendarCellHeight: 32
+
+  }
+  @Input() minDate?: any;                                 //In Format MM/DD/YYYY as string or a Date object or time in millisecond; (STRICT) (Default is current system date)
   @Input() maxDate?: any;                                 //In Format MM/DD/YYYY as string or a Date object or time in millisecond; (STRICT) (Default is 20 years from current system date)
-	@Input() monthToShow?: number = 2;                      //Number of months to be visible in the UI (Default: 1)
-  @Input() sideBySide?: boolean = true;                   //Number of months to be visible in the UI Horizontally (Default: 1)
 	@Input() enableRangeSelect?: boolean = true;            //Number of months to be visible in the UI Horizontally (Default: 1)
-	@Input() fontSize?: number = 14;                        //Number of months to be visible in the UI Horizontally (Default: 1)
   @Input() maximumDayInRange?: number = 10                //If range is selected then the maximum range to which the user can select.
-  @Input() gridLayout?: boolean = true                   //If Grid layout for the calendar (Default: true)
-  @Input() disableYearMonthDropdown: boolean = false;     //We can disable the Year and month dropdown accoording to the need (Default: false)
-  @Input() verticalInputAlignment: boolean = false;       //Vertical alignment of the two input box (Default: false)
-  @Input() dateDisplayFormat: string = 'EEEE, MMM d, y';  //Any kind of date format will work i.e supported my native angular date filter pipe
-  @Input() isExternalDataAvailable: boolean = true;
+  @Input() isExternalDataAvailable?: boolean = true;
   @Input() promiseData?: Observable<any>;
   @Output()
-  externalDateCallback: EventEmitter<any> = new EventEmitter<any>();
-  @Output()
   dateCallback: EventEmitter<any> = new EventEmitter<any>();
+  @Output()
+  externalDataCallback: EventEmitter<any> = new EventEmitter<any>();
+
 	public _appConstant: any = {
     days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     months: [{
@@ -100,7 +106,7 @@ export class CalendarComponent implements OnInit,OnChanges {
 	public months: any = this._appConstant.months;
 	public dateObj: any = {};
 	public userDateSelected: any = [];
-  public individualCalendarWidth: number = 0;
+  // public individualCalendarWidth: number = 0;
   public calenderHideFlag: boolean = true;
   public fromTimeClicked: boolean = false;
   public toTimeClicked: boolean = false;
@@ -109,9 +115,7 @@ export class CalendarComponent implements OnInit,OnChanges {
     to: {}
   };
   public calenderPosition = {top: 0,left:0};
-  public defaultCalenderWidth = 336;
-  public individualCalendarCellWidth = 45;
-  public individualCalendarCellHeight = 35;
+  public defaultCalenderWidth = 0;
   externalData: any = {};
 	selectMonthDropdown: number = 0;
 	selectYearDropdown: number = 0;
@@ -126,17 +130,14 @@ export class CalendarComponent implements OnInit,OnChanges {
 	constructor(private _elmRef: ElementRef, private sanitizer: DomSanitizer) {}
 
 	ngOnInit(): any {
-
     //check if monthTOShow should be equal or more then 1
-    if(this.monthToShow < 0) {
-      this.monthToShow = 1;
+    if(this.uiSettings.monthToShow < 0) {
+      this.uiSettings.monthToShow = 1;
       console.warn("Minimum value for monthToShow should be equal or more then 1");
     }
-    if (this.sideBySide) {
-      this.individualCalendarWidth = Math.floor(100 / this.monthToShow);
-    }else {
-      this.individualCalendarWidth = 100;
-    }
+
+    //below code to determine the optimal calender width
+    this.defaultCalenderWidth = (this.uiSettings.individualCalendarCellWidth * 7) + 10;
 
 		if (this.minDate) {
 			this.minDate = new Date(this.minDate);
@@ -171,14 +172,12 @@ export class CalendarComponent implements OnInit,OnChanges {
 		}
 		//below code generate year dropdown and also generate initial calendar
 		this.generateYears(this.minYear, this.maxYear);
-		this.generateInitialCalander(this.monthToShow, this.startMonth, this.startYear);
+		this.generateInitialCalander(this.uiSettings.monthToShow, this.startMonth, this.startYear);
   }
 
   ngOnChanges(changes:any):void {
     if(this.isExternalDataAvailable && changes.promiseData && changes.promiseData.currentValue) {
       this.promiseData.subscribe(data =>{
-        console.log("in subscribe Data");
-        console.log(data);
         this.externalData = data;
         this.integrateAsyncDataWithCurrentView();
       })
@@ -217,7 +216,7 @@ export class CalendarComponent implements OnInit,OnChanges {
 			_isPast = true;
 		} else if ((month < startMonth) && (year <= startYear)) {
 			_isPast = true;
-		} else if ((day < (startDay - 1)) && (month <= startMonth) && (year <= startYear)) {
+		} else if ((day < startDay) && (month <= startMonth) && (year <= startYear)) {
 			_isPast = true;
 		}
 		return _isPast;
@@ -259,7 +258,7 @@ export class CalendarComponent implements OnInit,OnChanges {
       'month': this.maxDate.getMonth(),
       'year': this.maxDate.getFullYear()
     }
-		let _dayObj: any = {
+		let _dayObj: IdateObject = {
 			'day': dayNumber + 1,
       'month': month,
       'year' : year,
@@ -337,7 +336,8 @@ export class CalendarComponent implements OnInit,OnChanges {
 		let month: number = parseInt(this.noOfCalenderView[0].split('-')[1]);
 		let year: number = parseInt(this.noOfCalenderView[0].split('-')[0]);
 		month = month - 1;
-		this.generateMonth(year, month, 'pre');
+    this.generateMonth(year, month, 'pre');
+    this.externalDataFetchCallback();
 	}
 
 	public setNextMonth(): void {
@@ -345,7 +345,8 @@ export class CalendarComponent implements OnInit,OnChanges {
 		let month: number = parseInt(this.noOfCalenderView[this.noOfCalenderView.length - 1].split('-')[1]);
 		let year: number = parseInt(this.noOfCalenderView[this.noOfCalenderView.length - 1].split('-')[0]);
 		month = month + 1;
-		this.generateMonth(year, month, 'next');
+    this.generateMonth(year, month, 'next');
+    this.externalDataFetchCallback();
 	}
 
 	public yearChange(year: any): void {
@@ -360,7 +361,8 @@ export class CalendarComponent implements OnInit,OnChanges {
 				_month = _month - 12;
 			}
 			this.generateMonth(_year, _month, 'next');
-		}
+    }
+    this.externalDataFetchCallback();
 	}
 
 	public monthChange(month: any): void {
@@ -375,7 +377,8 @@ export class CalendarComponent implements OnInit,OnChanges {
 				_month = _month - 12;
 			}
 			this.generateMonth(_year, _month, 'next');
-		}
+    }
+    this.externalDataFetchCallback();
   }
 
   public daysInBetween = function(date1_ms, date2_ms) {
@@ -429,7 +432,7 @@ export class CalendarComponent implements OnInit,OnChanges {
           this.rangeSelected.from = {'day': dayObject, 'date': dayObject.year + '-' + (dayObject.month + 1) + '-' + dayObject.day};
           this.rangeSelected.to = {};
           this.datehovered(dayObject, true);
-        }else {
+        }else if(dayObject.dateInMillisecond !== this.rangeSelected.from.day.dateInMillisecond){
           //condition to check if the selected to time is within the maximum day range selected.
           if(!this.maximumDayInRange || this.daysInBetween(this.rangeSelected.from.day.dateInMillisecond , dayObject.dateInMillisecond) <= this.maximumDayInRange) {
             if(this.rangeSelected.to.day) {
@@ -541,14 +544,12 @@ export class CalendarComponent implements OnInit,OnChanges {
           let monthObj = this.dateObj[key];
           monthObj.forEach((weekObj) => {
             weekObj.forEach((dayObj) => {
-              console.log(dayObj);
               dayObj = this.setExternalDataWithEachDayObj(dayObj);
             })
           })
         }
       }
     }
-    console.log(this.dateObj);
   }
 
   setExternalDataWithEachDayObj(dayObj) {
@@ -568,7 +569,7 @@ export class CalendarComponent implements OnInit,OnChanges {
 
   fromDatePopupOpenCoords(){
     var coords = this._elmRef.nativeElement.querySelector('.js-calenderFromTime').getBoundingClientRect();
-    if(this.verticalInputAlignment || !this.enableRangeSelect) {
+    if(this.uiSettings.verticalInputAlignment || !this.enableRangeSelect) {
       this.calenderPosition = {'top':coords.height + 20,'left':0};
     }else {
       this.calenderPosition = {'top':coords.height + 10,'left':0};
@@ -579,7 +580,7 @@ export class CalendarComponent implements OnInit,OnChanges {
   toDatePopupOpenCoords() {
     var coords = this._elmRef.nativeElement.querySelector('.js-calenderToTime').getBoundingClientRect();
     var coordsFrom = this._elmRef.nativeElement.querySelector('.js-calenderFromTime').getBoundingClientRect();
-    if(this.verticalInputAlignment) {
+    if(this.uiSettings.verticalInputAlignment) {
       this.calenderPosition = {'top':(coords.height+coordsFrom.height)+ 40,'left':0};
     }else {
       this.calenderPosition = {'top':coords.height+ 10,'left':coordsFrom.width + 2};
@@ -597,7 +598,10 @@ export class CalendarComponent implements OnInit,OnChanges {
   fromDateClicked(): void {
     //FUNCTION BINDED WITH VIEW
     this.fromDatePopupOpenCoords();
-    this.checkIfDateInDateRange(true)
+    this.checkIfDateInDateRange(true);
+    if(this.calenderHideFlag) {
+      this.externalDataFetchCallback();
+    }
     this.calenderHideFlag = false;
     this.fromTimeClicked = true;
     this.toTimeClicked = false;
@@ -606,6 +610,9 @@ export class CalendarComponent implements OnInit,OnChanges {
   toDateClicked(): void {
     //FUNCTION BINDED WITH VIEW
     this.toDatePopupOpenCoords();
+    if(this.calenderHideFlag) {
+      this.externalDataFetchCallback();
+    }
     this.calenderHideFlag = false;
     this.fromTimeClicked = false;
     this.toTimeClicked = true;
@@ -618,12 +625,11 @@ export class CalendarComponent implements OnInit,OnChanges {
   }
 
   componentCallback(): void {
-    // console.log('in component callback');
-    // console.log(this.rangeSelected);
+    this.dateCallback.emit(this.rangeSelected);
+  }
+
+  externalDataFetchCallback(): void {
     let _sendData: any = {};
-    _sendData.dates = this.rangeSelected;
-    _sendData.isNewDataNeeded = false;
-    // console.log(this.dateObj);
     if(this.isExternalDataAvailable) {
       let years = [];
       for (var key in this.dateObj) {
@@ -635,8 +641,9 @@ export class CalendarComponent implements OnInit,OnChanges {
         }
       }
       _sendData.yearDataNeeded = years;
-      _sendData.isNewDataNeeded = true;
+      console.log("just before callback");
+      console.log(_sendData);
+      this.externalDataCallback.emit(_sendData);
     }
-    this.dateCallback.emit(_sendData);
   }
 }

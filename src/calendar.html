@@ -1,34 +1,34 @@
 <div class="calendar">
-  <div class="calender--input-wrapper" [ngClass]="{'calender--input-alignment': verticalInputAlignment}" *ngIf="enableRangeSelect">
+  <div class="calender--input-wrapper" [ngClass]="{'calender--input-alignment': uiSettings.verticalInputAlignment}" *ngIf="enableRangeSelect">
       <div class="calender__input js-calenderFromTime">
         <label>Select From Date</label>
-        <input type="text" readonly (click)="fromDateClicked()"  [value]="rangeSelected.from.date | date: dateDisplayFormat" class="calender--input" placeholder="From Time"/>
+        <input type="text" readonly (click)="fromDateClicked()"  [value]="rangeSelected.from.date | date: uiSettings.dateDisplayFormat" class="calender--input" placeholder="From Time"/>
       </div>
       <div class="calender__input js-calenderToTime">
         <label>Select To Date</label>
-        <input type="text" readonly (click)="toDateClicked()" class="calender--input" [value]="rangeSelected.to.date | date: dateDisplayFormat" placeholder="To Time"/>
+        <input type="text" readonly (click)="toDateClicked()" class="calender--input" [value]="rangeSelected.to.date | date: uiSettings.dateDisplayFormat" placeholder="To Time"/>
       </div>
     </div>
     <div class="calender--input-wrapper calender--input-alignment" *ngIf="!enableRangeSelect">
       <div class="calender__input js-calenderFromTime">
         <label>Select  Date</label>
-        <input type="text" readonly (click)="fromDateClicked()"  [value]="userDateSelected.dateInMillisecond | date: dateDisplayFormat" class="calender--input" placeholder="From Time"/>
+        <input type="text" readonly (click)="fromDateClicked()"  [value]="userDateSelected.dateInMillisecond | date: uiSettings.dateDisplayFormat" class="calender--input" placeholder="From Time"/>
       </div>
     </div>
-  <div [hidden]="calenderHideFlag" class="calendar__wrapper calender--triangle" [ngStyle]="{'width': ''+ defaultCalenderWidth*monthToShow +'px','top': calenderPosition.top+'px','left': calenderPosition.left+'px'}" [ngClass]="{'calendar__no-grid': !gridLayout,'calendar__disable-dropdown': disableYearMonthDropdown}">
+  <div [hidden]="calenderHideFlag" class="calendar__wrapper calender--triangle" [ngStyle]="{'width': ''+ defaultCalenderWidth*uiSettings.monthToShow +'px','top': calenderPosition.top+'px','left': calenderPosition.left+'px'}" [ngClass]="{'calendar__no-grid': !uiSettings.gridLayout,'calendar__disable-dropdown': uiSettings.disableYearMonthDropdown}">
     <div class="container calendar__heading calendar--full-width">
       <div class="calendar--full-width">
         <div class="calendar__arrow-left">
           <button type="button" [disabled]="(selectYearDropdown <= startYear) && (selectMonthDropdown === 0)" class="btn calendar--button" (click)='setPrevMonth()'><i></i></button>
         </div>
-        <div class="calendar__month" *ngIf="!disableYearMonthDropdown">
+        <div class="calendar__month" *ngIf="!uiSettings.disableYearMonthDropdown">
           <div class="custom-select">
             <select  [(ngModel)]="selectMonthDropdown" (change)="monthChange($event.target.value)">
               <option *ngFor="let month of months" [value]="month.value">{{month.text}}</option>
             </select>
           </div>
         </div>
-        <div class="calendar__year" *ngIf="!disableYearMonthDropdown">
+        <div class="calendar__year" *ngIf="!uiSettings.disableYearMonthDropdown">
           <div class="custom-select">
             <select [(ngModel)]="selectYearDropdown" (change)="yearChange($event.target.value)">
               <option *ngFor="let year of years" [value]="year">{{year}}</option>
@@ -41,7 +41,7 @@
       </div>
     </div>
     <div (mouseleave) ="closeCalender($event)" class="calendar__container ">
-      <table class="table-bordered calendar__table calendar--full-width" *ngFor="let year of noOfCalenderView" [ngStyle]="{'width': ''+ individualCalendarWidth +'%','font-size': fontSize+'px'}">
+      <table class="table-bordered calendar__table calendar--full-width" *ngFor="let year of noOfCalenderView" [ngStyle]="{'width': ''+ individualCalendarWidth +'%','font-size': uiSettings.fontSize+'px'}">
         <thead>
           <tr>
             <th colspan="7" class="calendar__table--date">{{year | ng4CalendarDateFromat}}</th>
@@ -54,13 +54,12 @@
             <tr *ngFor="let days of dateObj[year]">
               <td *ngFor="let day of days;let i = index" [ngClass]="{'disabled':day.isDisabled,'current-day':day.isCurrent,'selected-date':day.isSelected,'continue-date': day.isHovered,'cell-stripe': day.isDateRangeExceeded}">
                 <div *ngIf="day.day" class="calender-tooltip" (click)="!day.isDisabled && dateClicked(day)" (mouseover)='datehovered(day)'>
-                  <div class="text-center monthly-date" [ngStyle]="{'width': individualCalendarCellWidth+'px'}">
+                  <div class="text-center monthly-date" [ngStyle]="{'width': uiSettings.individualCalendarCellWidth+'px','height': uiSettings.individualCalendarCellHeight+'px'}">
                     <span>{{day.day}}</span>
                     <span *ngIf="day.data.value" class="monthly-date-val" [ngStyle]="{'color': day.data.color}">{{day.data.value}}</span>
 
                     <!-- tooltip -->
-                    <div [hidden]="!(day.isDateRangeExceeded || day.data.additionalTooltipMsg)" class="calender-tooltiptext calender-tooltip-bottom">
-
+                    <div *ngIf="!uiSettings.disableTooltip" [hidden]="!(day.isDateRangeExceeded || day.data.additionalTooltipMsg)" class="calender-tooltiptext calender-tooltip-bottom">
                       <div *ngIf="day.data.additionalTooltipMsg" class="calender-tooltip--extra" [innerHTML]="day.data.additionalTooltipMsg"></div>
                       <div *ngIf="day.isDateRangeExceeded && day.data.additionalTooltipMsg"class="calender-tooltip--separator"></div>
                       <div *ngIf="day.isDateRangeExceeded" class="calender-tooltip--no-selection">Max Date Range Selection allowed upto {{maximumDayInRange}} days</div>

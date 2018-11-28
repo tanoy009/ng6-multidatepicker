@@ -100,13 +100,15 @@ export class DemoComponent {
     }, 3000);
   }
 
+  externalDataFetchCallback(event: any) {
+    console.log("in fetch");
+    console.log(event);
+    this.test(event.yearDataNeeded);
+  }
 
-  dateReturnCall(event: any) {
+  dateCallback(event: any) {
     console.log('date selected');
     console.log(event);
-    if(event && event.isNewDataNeeded) {
-      this.test(event.yearDataNeeded);
-    }
   }
 
   getCodeHtml(data: any): any {
