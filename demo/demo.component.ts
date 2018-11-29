@@ -6,6 +6,8 @@ import { Observable } from 'rxjs';
   templateUrl: './demo/demo.component.html'
 })
 export class DemoComponent {
+  public defaultFrom: any = "";
+  public defaultTo: any = "";
 	public componentData1: any = '';
   public componentData2: any = '';
   public componentData3: any = '';
@@ -64,6 +66,10 @@ export class DemoComponent {
 
   constructor() {
     // this.test();
+    setTimeout(() => {
+      this.defaultFrom = "2018-12-31";
+      this.defaultTo = "";
+    }, 5000);
   }
 
   mockCalenderDataGenerator(year, noOfDays){
@@ -104,6 +110,7 @@ export class DemoComponent {
     console.log("in fetch");
     console.log(event);
     this.test(event.yearDataNeeded);
+
   }
 
   dateCallback(event: any) {

@@ -50,9 +50,9 @@ export class CalendarComponent implements OnInit,OnChanges {
   }
   @Input() minDate?: any;                                 //In Format MM/DD/YYYY as string or a Date object or Date in millisecond; (STRICT) (Default is current system date)
   @Input() maxDate?: any;                                 //In Format MM/DD/YYYY as string or a Date object or Date in millisecond; (STRICT) (Default is 20 years from min date)
-  @Input() defaultFromDate?: any;
-  @Input() defaultToDate?: any;
-  @Input() enableRangeSelect?: boolean = true;           //Number of months to be visible in the UI Horizontally (Default: 1)
+  @Input() defaultFromDate?: any;                         //In Format MM/DD/YYYY as string or a Date object or Date in millisecond; (STRICT)
+  @Input() defaultToDate?: any;                           //In Format MM/DD/YYYY as string or a Date object or Date in millisecond; (STRICT)
+  @Input() enableRangeSelect?: boolean = true;            //Number of months to be visible in the UI Horizontally (Default: 1)
   @Input() maximumDayInRange?: number = 10                //If range is selected then the maximum range to which the user can select.
   @Input() isExternalDataAvailable?: boolean = true;
   @Input() promiseData?: Observable<any>;
@@ -117,6 +117,7 @@ export class CalendarComponent implements OnInit,OnChanges {
   };
   public calenderPosition = {top: 0,left:0};
   public defaultCalenderWidth = 0;
+  ngInitInitializedFlag: boolean = false;
   externalData: any = {};
 	selectMonthDropdown: number = 0;
 	selectYearDropdown: number = 0;
@@ -169,7 +170,7 @@ export class CalendarComponent implements OnInit,OnChanges {
 			'day': dayNumber + 1,
       'month': month,
       'year' : year,
-      'dateInMillisecond': new Date(year + '-' + (month + 1) + '-' + (dayNumber + 1)).getTime(),
+      'dateInMillisecond': new Date(year + '-' + (month + 1) + '-' + (dayNumber + 1)).setHours(0,0,0,0),
 			'isDisabled': false,
 			'isCurrent': this.isCurrentDate(dayNumber, month, year),
 			'isSelected': false,
@@ -317,29 +318,87 @@ export class CalendarComponent implements OnInit,OnChanges {
     return dayObj;
   }
 
-  private setDefaultDates(startDate: number, endDate?: number): void {
-    if(!endDate || (startDate<endDate)) {
-
+  private setDefaultDates(startDate?: number, endDate?: number): void {
+    if(startDate) {
+      let _dayObj: IdateObject = this.getDateObjectFromTimeStamp(startDate);
+      let _year = _dayObj.year;
+      let _month = _dayObj.month;
+      this.fromTimeClicked = true;
+      this.toTimeClicked = false;
+      this.dateClicked(_dayObj);
+      this.selectMonthDropdown = _month;
+      this.selectYearDropdown = _year;
+      this.noOfCalenderView = [];
+      this.noOfCalenderView.push(_year + '-' + _month);
+      for(let i = 0;i< this.uiSettings.monthToShow - 1;i++) {
+        _month = _month + 1;
+        if(_month > 11) {
+          _month = 0;
+          _year = _year + 1;
+        }
+        if(!this.dateObj[_year + '-' + _month]) {
+          this.setMonthly(_month, _year);
+        }
+        this.noOfCalenderView.push(_year + '-' + _month);
+      }
     }
+    if(endDate) {
+      let _dayObj: IdateObject = this.getDateObjectFromTimeStamp(endDate);
+      this.fromTimeClicked = false;
+      this.toTimeClicked = true;
+      this.dateClicked(_dayObj);
+    }
+  }
+
+  private getDateObjectFromTimeStamp(date: any): IdateObject {
+    let _date: any = new Date(date);
+    let _dateObj: IdateObject;
+    if(_date !== 'Invalid Date') {
+      _date = new Date(_date.setHours(0,0,0,0));
+      let _year = _date.getFullYear();
+      let _month = _date.getMonth();
+      let _key = _year+'-'+_month;
+      let _inMillisecond = _date.getTime();
+      if(!this.dateObj[_key]) {
+        this.setMonthly(_month, _year);
+      }
+      let monthObj = this.dateObj[_key];
+      monthObj.forEach((weekObj) => {
+        weekObj.forEach((dayObj) => {
+          if(dayObj.dateInMillisecond === _inMillisecond) {
+            _dateObj = dayObj;
+          }
+        })
+      })
+    }
+    return _dateObj;
   }
 
   private fromDatePopupOpenCoords(): void{
-    var coords = this._elmRef.nativeElement.querySelector('.js-calenderFromTime').getBoundingClientRect();
-    if(this.uiSettings.verticalInputAlignment || !this.enableRangeSelect) {
-      this.calenderPosition = {'top':coords.height + 20,'left':0};
-    }else {
-      this.calenderPosition = {'top':coords.height + 10,'left':0};
+    let elem = this._elmRef.nativeElement.querySelector('.js-calenderFromTime');
+    if(elem) {
+      var coords = elem.getBoundingClientRect();
+      if(this.uiSettings.verticalInputAlignment || !this.enableRangeSelect) {
+        this.calenderPosition = {'top':coords.height + 20,'left':0};
+      }else {
+        this.calenderPosition = {'top':coords.height + 10,'left':0};
+      }
     }
+
   }
 
   private toDatePopupOpenCoords(): void {
-    var coords = this._elmRef.nativeElement.querySelector('.js-calenderToTime').getBoundingClientRect();
-    var coordsFrom = this._elmRef.nativeElement.querySelector('.js-calenderFromTime').getBoundingClientRect();
-    if(this.uiSettings.verticalInputAlignment) {
-      this.calenderPosition = {'top':(coords.height+coordsFrom.height)+ 40,'left':0};
-    }else {
-      this.calenderPosition = {'top':coords.height+ 10,'left':coordsFrom.width + 2};
+    let elem = this._elmRef.nativeElement.querySelector('.js-calenderToTime');
+    if(elem) {
+      let coords = elem.getBoundingClientRect();
+      let coordsFrom = this._elmRef.nativeElement.querySelector('.js-calenderFromTime').getBoundingClientRect();
+      if(this.uiSettings.verticalInputAlignment) {
+        this.calenderPosition = {'top':(coords.height+coordsFrom.height)+ 40,'left':0};
+      }else {
+        this.calenderPosition = {'top':coords.height+ 10,'left':coordsFrom.width + 2};
+      }
     }
+
   }
 
   private generateYears(minYear: number, maxYear: number): void {
@@ -411,7 +470,7 @@ export class CalendarComponent implements OnInit,OnChanges {
 			this.maxDate = new Date(this.maxDate);
 		} else {
       //default 20 years from the current date if max Date is not given.
-			this.maxDate = new Date(this.minDate.getTime()+630720000000);
+			this.maxDate = new Date(this.minDate.setHours(0,0,0,0)+630720000000);
     }
 
     //check if minDate is less then max date and vice versa
@@ -434,7 +493,18 @@ export class CalendarComponent implements OnInit,OnChanges {
 		}
 		//below code generate year dropdown and also generate initial calendar
 		this.generateYears(this.minYear, this.maxYear);
-		this.generateInitialCalander(this.uiSettings.monthToShow, this.startMonth, this.startYear);
+    this.generateInitialCalander(this.uiSettings.monthToShow, this.startMonth, this.startYear);
+
+    //below code to set default date if available during initialization
+    if(this.defaultFromDate) {
+      this.setDefaultDates(this.defaultFromDate, 0);
+    }
+
+    if(this.defaultToDate) {
+      this.setDefaultDates(0, this.defaultToDate);
+    }
+    this.ngInitInitializedFlag = true;
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -444,19 +514,21 @@ export class CalendarComponent implements OnInit,OnChanges {
         this.integrateAsyncDataWithCurrentView();
       })
     }
-    // for (let propName in changes) {
-    //   let change = changes[propName];
-    //   console.dir(change);
-    //   if(change.isFirstChange()) {
-    //     console.log(`first change: ${propName}`);
-    //   } else {
-    //     console.log(`prev: ${change.previousValue}, cur: ${change.currentValue}`);
-    //   }
-    // }
+    if(changes['defaultFromDate'] && this.ngInitInitializedFlag && (changes['defaultFromDate'].previousValue !== changes['defaultFromDate'].currentValue)) {
+      this.setDefaultDates(this.defaultFromDate, 0);
+    }
+    if(changes['defaultToDate'] && this.ngInitInitializedFlag && (changes['defaultToDate'].previousValue !== changes['defaultToDate'].currentValue)) {
+      if(this.rangeSelected.from.date) {
+        this.setDefaultDates(0, this.defaultToDate);
+      }else  {
+        console.error("'To date' cannot be default selected without 'from date' selected");
+      }
+
+    }
   }
 
   //public functions binded with view
-	public dateClicked(dayObject: any, days: any): void {
+	public dateClicked(dayObject: any): void {
     if (!this.enableRangeSelect) {
       if (!dayObject.isSelected && this.userDateSelected.isSelected) {
         this.userDateSelected.isSelected = false;
@@ -467,7 +539,6 @@ export class CalendarComponent implements OnInit,OnChanges {
       this.dateCallback.emit(_tempDate);
     }else {
       if(this.fromTimeClicked) {
-        dayObject.isSelected = true;
         if(this.rangeSelected.from.day) {
           this.rangeSelected.from.day.isSelected = false;
         }
@@ -484,12 +555,13 @@ export class CalendarComponent implements OnInit,OnChanges {
             this.dateHovered(_toDatObj, true);
           }
         }
+        dayObject.isSelected = true;
         this.toDatePopupOpenCoords();
         this.toTimeClicked = true;
         this.fromTimeClicked = false;
       }else if(this.toTimeClicked){
-        var _fromDatObj = Object.assign({}, this.rangeSelected.from.day);
-        var _tempPastDate = this.isPastDate(dayObject.day, dayObject.month, dayObject.year, _fromDatObj.year, _fromDatObj.month, _fromDatObj.day);
+        let _fromDatObj = Object.assign({}, this.rangeSelected.from.day);
+        let _tempPastDate = this.isPastDate(dayObject.day, dayObject.month, dayObject.year, _fromDatObj.year, _fromDatObj.month, _fromDatObj.day);
         if(!_fromDatObj.dateInMillisecond) {
           dayObject.isSelected = true;
           this.rangeSelected.from = {'day': dayObject, 'date': dayObject.year + '-' + (dayObject.month + 1) + '-' + dayObject.day};
@@ -527,23 +599,23 @@ export class CalendarComponent implements OnInit,OnChanges {
   public dateHovered(dayObject: any, forceExecute?: boolean): void {
     if (this.enableRangeSelect && this.rangeSelected.from.day && (!this.rangeSelected.to.day || forceExecute)) {
       let _months: any = Object.keys(this.dateObj);
-      for(let i: number = 0; i < _months.length; i++) {
-        for  (let j: number = 0; j < this.dateObj[_months[i]].length; j++) {
-          for (let k: number = 0; k < this.dateObj[_months[i]][j].length; k++) {
-            if (this.dateObj[_months[i]][j][k].day && !this.dateObj[_months[i]][j][k].isDisabled && !this.dateObj[_months[i]][j][k].isDateRangeExceeded) {
+      _months.forEach((month)=>{
+        this.dateObj[month].forEach((weeks) =>{
+          weeks.forEach((day)=>{
+            if (day.day && !day.isDisabled && !day.isDateRangeExceeded) {
               let _fromDatObj: any = Object.assign({}, this.rangeSelected.from.day);
-              let _dateObj: any = Object.assign({}, this.dateObj[_months[i]][j][k]);
+              let _dateObj: any = Object.assign({}, day);
 							let _dateValid: boolean = false;
               _dateValid = this.dateValidityCheck(_fromDatObj, dayObject, _dateObj);
               if (_dateValid) {
-                this.dateObj[_months[i]][j][k].isHovered = true;
+                day.isHovered = true;
               }else {
-                this.dateObj[_months[i]][j][k].isHovered = false;
+                day.isHovered = false;
               }
             }
-          }
-        }
-      }
+          })
+        })
+      });
     }
   }
 
@@ -639,6 +711,8 @@ export class CalendarComponent implements OnInit,OnChanges {
   //components callbacks
   public componentCallback(): void {
     this.dateCallback.emit(this.rangeSelected);
+    console.log("callback");
+    console.log(this.dateObj);
   }
 
   public externalDataFetchCallback(): void {
@@ -654,8 +728,6 @@ export class CalendarComponent implements OnInit,OnChanges {
         }
       }
       _sendData.yearDataNeeded = years;
-      console.log("just before callback");
-      console.log(_sendData);
       this.externalDataCallback.emit(_sendData);
     }
   }
