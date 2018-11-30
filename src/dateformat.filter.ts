@@ -54,7 +54,7 @@ export class Ng4CalendarDateFromatPipe implements PipeTransform {
 	  }
 	  for (let i: number = 0; i < monthArr.length; i++) {
 	  	if (monthArr[i].value === _month) {
-	  		if(_dayOfWeek) {
+	  		if (_dayOfWeek) {
 	  			filter = _dayOfWeek + ', ' + monthArr[i].text + ' ' + args1 + ', ' + _year;
 	  		}else {
 	  			filter = monthArr[i].text + ', ' + _year;
