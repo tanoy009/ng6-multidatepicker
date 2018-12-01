@@ -1,9 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-    name: 'ng4CalendarDateFromat'
+    name: 'ng6CalendarDateFormat'
 })
-export class Ng4CalendarDateFromatPipe implements PipeTransform {
+export class Ng6CalendarDateFormatPipe implements PipeTransform {
   transform(value: any, args1?: number): string {
   	value = value.split('-');
   	let days: any = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thrusday', 'Friday', 'Satday'];
@@ -56,7 +56,7 @@ export class Ng4CalendarDateFromatPipe implements PipeTransform {
 	  	if (monthArr[i].value === _month) {
 	  		if (_dayOfWeek) {
 	  			filter = _dayOfWeek + ', ' + monthArr[i].text + ' ' + args1 + ', ' + _year;
-	  		}else {
+	  		} else {
 	  			filter = monthArr[i].text + ', ' + _year;
 	  		}
 	  		break;

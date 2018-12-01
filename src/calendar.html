@@ -44,7 +44,7 @@
       <table class="table-bordered calendar__table calendar--full-width" *ngFor="let year of noOfCalenderView" [ngStyle]="{'width': ''+ individualCalendarWidth +'%','font-size': uiSettings.fontSize+'px'}">
         <thead>
           <tr>
-            <th colspan="7" class="calendar__table--date">{{year | ng4CalendarDateFromat}}</th>
+            <th colspan="7" class="calendar__table--date">{{year | ng6CalendarDateFormat}}</th>
           </tr>
           <tr>
             <th *ngFor="let day of defaultDays" class="text-center">{{day}}</th>

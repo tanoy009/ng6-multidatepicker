@@ -31,7 +31,7 @@ export interface IdateObject {
 }
 
 @Component({
-  selector: 'ng4multi-calendar',
+  selector: 'ng6multi-calendar',
   templateUrl: './src/calendar.html',
   styleUrls: ['./src/calendar.css'],
 })
@@ -200,7 +200,7 @@ export class CalendarComponent implements OnInit, OnChanges {
     if (changes['defaultToDate'] && this.ngInitInitializedFlag && (changes['defaultToDate'].previousValue !== changes['defaultToDate'].currentValue)) {
       if (this.rangeSelected.from.date) {
         this.setDefaultDates(0, this.defaultToDate);
-      }else {
+      } else {
         console.error('"To date" cannot be default selected without "from date" selected');
       }
 
@@ -217,7 +217,7 @@ export class CalendarComponent implements OnInit, OnChanges {
       this.userDateSelected = dayObject;
       let _tempDate: string = dayObject.year + '-' + (dayObject.month + 1) + '-' + dayObject.day;
       this.dateCallback.emit(_tempDate);
-    }else {
+    } else {
       if (this.fromTimeClicked) {
         if (this.rangeSelected.from.day) {
           this.rangeSelected.from.day.isSelected = false;
@@ -231,7 +231,7 @@ export class CalendarComponent implements OnInit, OnChanges {
             this.rangeSelected.to.day.isSelected = false;
             this.rangeSelected.to = {};
             this.removeDateHovered();
-          }else {
+          } else {
             this.dateHovered(_toDatObj, true);
           }
         }
@@ -239,7 +239,7 @@ export class CalendarComponent implements OnInit, OnChanges {
         this.toDatePopupOpenCoords();
         this.toTimeClicked = true;
         this.fromTimeClicked = false;
-      }else if (this.toTimeClicked) {
+      } else if (this.toTimeClicked) {
         let _fromDatObj: IdateObject = Object.assign({}, this.rangeSelected.from.day);
         let _tempPastDate: boolean = this.isPastDate(dayObject.day, dayObject.month, dayObject.year, _fromDatObj.year, _fromDatObj.month, _fromDatObj.day);
         if (!_fromDatObj.dateInMillisecond) {
@@ -247,7 +247,7 @@ export class CalendarComponent implements OnInit, OnChanges {
           this.rangeSelected.from = {'day': dayObject, 'date': dayObject.year + '-' + (dayObject.month + 1) + '-' + dayObject.day};
           this.rangeSelected.to = {};
           this.dateHovered(dayObject, true);
-        }else if (_tempPastDate) {
+        } else if (_tempPastDate) {
           if (this.rangeSelected.from.day) {
             this.rangeSelected.from.day.isSelected = false;
           }
@@ -258,7 +258,7 @@ export class CalendarComponent implements OnInit, OnChanges {
           this.rangeSelected.from = {'day': dayObject, 'date': dayObject.year + '-' + (dayObject.month + 1) + '-' + dayObject.day};
           this.rangeSelected.to = {};
           this.dateHovered(dayObject, true);
-        }else if (dayObject.dateInMillisecond !== this.rangeSelected.from.day.dateInMillisecond) {
+        } else if (dayObject.dateInMillisecond !== this.rangeSelected.from.day.dateInMillisecond) {
           //condition to check if the selected to time is within the maximum day range selected.
           if (!this.maximumDayInRange || this.daysInBetween(this.rangeSelected.from.day.dateInMillisecond , dayObject.dateInMillisecond) <= this.maximumDayInRange) {
             if (this.rangeSelected.to.day) {
@@ -289,7 +289,7 @@ export class CalendarComponent implements OnInit, OnChanges {
               _dateValid = this.dateValidityCheck(_fromDatObj, dayObject, _dateObj);
               if (_dateValid) {
                 day.isHovered = true;
-              }else {
+              } else {
                 day.isHovered = false;
               }
             }
@@ -506,7 +506,7 @@ export class CalendarComponent implements OnInit, OnChanges {
       let one_day: number = 1000 * 60 * 60 * 24;    // One day in milliseconds
       let difference_ms: number = date2_ms - date1_ms;        // Convert back to days and return
       return Math.round(difference_ms / one_day) + 1;
-    };
+    }
 
     private dateValidityCheck(fromDate: any, toDate: any, selectedDate: any): boolean {
       let _currentDate: any = (selectedDate.month + 1) + '/' +  selectedDate.day + '/' + selectedDate.year;
@@ -517,7 +517,7 @@ export class CalendarComponent implements OnInit, OnChanges {
       _maxDate = new Date(_maxDate);
       if (_currentDate > _minDate && _currentDate < _maxDate ) {
         return true;
-      }else {
+      } else {
         return false;
       }
     }
@@ -525,14 +525,14 @@ export class CalendarComponent implements OnInit, OnChanges {
     private isInDateRange(dayObject: any): boolean {
       if (this.fromTimeClicked || !this.maximumDayInRange || dayObject.isDisabled) {
         return false;
-      }else {
+      } else {
         if (this.rangeSelected.from.day) {
           if (this.daysInBetween(this.rangeSelected.from.day.dateInMillisecond , dayObject.dateInMillisecond) <= this.maximumDayInRange) {
             return false;
-          }else {
+          } else {
             return true;
           }
-        }else {
+        } else {
           return false;
         }
       }
@@ -546,7 +546,7 @@ export class CalendarComponent implements OnInit, OnChanges {
             for (let k: number = 0; k < this.dateObj[_months[i]][j].length; k++) {
               if (forceDisableFlag) {
                 this.dateObj[_months[i]][j][k].isDateRangeExceeded = false;
-              }else if (this.dateObj[_months[i]][j][k].day && !this.dateObj[_months[i]][j][k].isDisabled) {
+              } else if (this.dateObj[_months[i]][j][k].day && !this.dateObj[_months[i]][j][k].isDisabled) {
                 this.dateObj[_months[i]][j][k].isDateRangeExceeded = this.isInDateRange(this.dateObj[_months[i]][j][k]);
               }
             }
@@ -660,7 +660,7 @@ export class CalendarComponent implements OnInit, OnChanges {
         let coords: any = elem.getBoundingClientRect();
         if (this.uiSettings.verticalInputAlignment || !this.enableRangeSelect) {
           this.calenderPosition = {'top': coords.height + 20, 'left': 0};
-        }else {
+        } else {
           this.calenderPosition = {'top': coords.height + 10, 'left': 0};
         }
       }
@@ -674,7 +674,7 @@ export class CalendarComponent implements OnInit, OnChanges {
         let coordsFrom: any = this._elmRef.nativeElement.querySelector('.js-calenderFromTime').getBoundingClientRect();
         if (this.uiSettings.verticalInputAlignment) {
           this.calenderPosition = {'top': (coords.height + coordsFrom.height) + 40, 'left': 0};
-        }else {
+        } else {
           this.calenderPosition = {'top': coords.height + 10, 'left': coordsFrom.width + 2};
         }
       }
