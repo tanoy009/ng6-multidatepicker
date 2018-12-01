@@ -4,7 +4,6 @@ import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 import { CalendarComponent } from './calendar.component';
 import { Ng6CalendarDateFormatPipe } from './dateformat.filter';
-import { CalendarService } from './calendar.service';
 import { LocalStorageService } from './storage.service';
 import { GlobalRef, BrowserGlobalRef } from './windowRef.service';
 @NgModule({
@@ -21,7 +20,7 @@ import { GlobalRef, BrowserGlobalRef } from './windowRef.service';
     CalendarComponent,
     Ng6CalendarDateFormatPipe
   ],
-  providers : [{ provide: GlobalRef, useClass: BrowserGlobalRef }, CalendarService, LocalStorageService]
+  providers : [{ provide: GlobalRef, useClass: BrowserGlobalRef }, LocalStorageService]
 })
 export class Ng6CalendarModule {
 

@@ -180,7 +180,6 @@
 
 .calendar__table tbody td:hover {
     cursor: pointer;
-    background-color: #97f1ff;
 }
 
 .calendar__table tbody td:hover .monthly-date {
@@ -250,10 +249,6 @@
     /* Opera */
 }
 
-.calendar__table .continue-date {
-    background-color: #97f1ff;
-}
-
 .calendar__table .continue-date .monthly-date {
     color: #047b8d;
 }
@@ -282,17 +277,13 @@
   border: none;
 }
 
-.calendar .selected-date {
-    background-color: #3dbfd3 !important;
-}
-
 .calendar .selected-date .monthly-date {
     color: #fff !important;
 }
 
 .calender--input-wrapper {
   display: flex;
-  margin-bottom: 10px;
+  padding-bottom: 10px;
 }
 
 .calender__input {

@@ -1,8 +1,7 @@
-﻿import { Component, PLATFORM_ID, SimpleChanges, Input, Output, EventEmitter, OnInit, OnChanges, ElementRef } from '@angular/core';
+﻿import { Component, PLATFORM_ID, SimpleChanges, Input, Output, EventEmitter, OnInit, OnChanges, ElementRef, Inject } from '@angular/core';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import { GlobalRef } from './windowRef.service';
-import { CalendarService } from './calendar.service';
 import { Observable } from 'rxjs';
 
 export interface  IuiSettings {
@@ -15,6 +14,21 @@ export interface  IuiSettings {
   fontSize: number;                     //Font size of the date (Default: 14)
   individualCalendarCellWidth: number;  //config to change the cell width
   individualCalendarCellHeight: number; //config to change the cell height
+  selectedCellColor: string;            //config to change the user selected cell color
+  hoverCellColor: string;               //config to change the cell hover color
+}
+
+export interface IuiInputSettings {
+  fromDateWidth: string;                //config to change the from date input box width
+  fromDatePlaceholder: string;          //config to change the from date placeholder text (Default: 'From Date')
+  fromDateLabelText: string;            //config to change the from date label text (Default: 'Select From Date')
+  fromDateLabelHide: boolean;           //config to hide the from date label (Default: false)
+  fromDateMargin: string;               //config to set the from date input box margin if required (Default: 0)
+  toDateWidth: string;                  //config to change the to date input box width
+  toDatePlaceholder: string;            //config to change the to date placeholder text (Default: 'To Date')
+  toDateLabelText: string;              //config to change the to date label text (Default: 'Select To Date')
+  toDateLabelHide: boolean;             //config to hide the to date label (Default: false)
+  toDateMargin: string;                 //config to set the to date input box margin if required (Default: 0)
 }
 
 export interface IdateObject {
@@ -26,6 +40,7 @@ export interface IdateObject {
   'isCurrent': boolean;
   'isSelected': boolean;
   'isHovered': boolean;
+  'isMouseHover': boolean;
   'isDateRangeExceeded': boolean;
   'data': any;
 }
@@ -34,6 +49,9 @@ export interface IdateObject {
   selector: 'ng6multi-calendar',
   templateUrl: './src/calendar.html',
   styleUrls: ['./src/calendar.css'],
+  host: {
+    '(document:click)': 'closeAutocomplete($event)',
+  }
 })
 export class CalendarComponent implements OnInit, OnChanges {
   @Input() uiSettings: IuiSettings = {
@@ -45,20 +63,34 @@ export class CalendarComponent implements OnInit, OnChanges {
     monthToShow: 2,
     fontSize: 14,
     individualCalendarCellWidth: 48,
-    individualCalendarCellHeight: 32
+    individualCalendarCellHeight: 32,
+    selectedCellColor: '#3dbfd3',
+    hoverCellColor: '#97f1ff'
   };
-  @Input() minDate?: any;                                 //In Format MM/DD/YYYY as string or a Date object or Date in millisecond; (STRICT) (Default is current system date)
-  @Input() maxDate?: any;                                 //In Format MM/DD/YYYY as string or a Date object or Date in millisecond; (STRICT) (Default is 20 years from min date)
-  @Input() defaultFromDate?: any;                         //In Format MM/DD/YYYY as string or a Date object or Date in millisecond; (STRICT)
-  @Input() defaultToDate?: any;                           //In Format MM/DD/YYYY as string or a Date object or Date in millisecond; (STRICT)
-  @Input() enableRangeSelect?: boolean = true;            //Number of months to be visible in the UI Horizontally (Default: 1)
-  @Input() maximumDayInRange?: number = 10;               //If range is selected then the maximum range to which the user can select.
-  @Input() isExternalDataAvailable?: boolean = true;
-  @Input() promiseData?: Observable<any>;
+  @Input() uiInputSettings: IuiInputSettings = {
+    fromDateWidth: '50%',
+    fromDatePlaceholder: 'From Date',
+    fromDateLabelText: 'Select From Date',
+    fromDateLabelHide: false,
+    fromDateMargin: '0',
+    toDateWidth: '50%',
+    toDatePlaceholder: 'To Date',
+    toDateLabelText: 'Select To Date',
+    toDateLabelHide: false,
+    toDateMargin: '0'
+  };
+  @Input() minDate?: any;                                             //In Format MM/DD/YYYY as string or a Date object or Date in millisecond; (STRICT) (Default is current system date)
+  @Input() maxDate?: any;                                             //In Format MM/DD/YYYY as string or a Date object or Date in millisecond; (STRICT) (Default is 20 years from min date)
+  @Input() defaultFromDate?: any;                                     //In Format MM/DD/YYYY as string or a Date object or Date in millisecond; (STRICT)
+  @Input() defaultToDate?: any;                                       //In Format MM/DD/YYYY as string or a Date object or Date in millisecond; (STRICT)
+  @Input() enableRangeSelect?: boolean = true;                        //config for number of months to be visible in the UI Horizontally (Default: 1)
+  @Input() maximumDayInRange?: number = 10;                           //config to set maximum range to which the user can select.
+  @Input() isExternalDataAvailable?: boolean = true;                  //config to be set true if any external data to be shown inside the calendar
+  @Input() promiseData?: Observable<any>;                             //config to be used when 'isExternalDataAvailable' is set to true and the input should be an observable who returns data according to the format mentioned in doc.
   @Output()
-  dateCallback: EventEmitter<any> = new EventEmitter<any>();
+  dateCallback: EventEmitter<any> = new EventEmitter<any>();          //this output method will be called whenever user selects a date i.e either from date or to date or both.
   @Output()
-  externalDataCallback: EventEmitter<any> = new EventEmitter<any>();
+  externalDataCallback: EventEmitter<any> = new EventEmitter<any>();  //this output method will be called whenever a any month or year is changed to get the fresh latest data to be shown in the calender.
 
 	public _appConstant: any = {
     days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
@@ -128,7 +160,11 @@ export class CalendarComponent implements OnInit, OnChanges {
 	startMonth: number = this.currentMonth;
 	startYear: number = this.currentYear;
 	noOfCalenderView: any = [];
-	constructor(private _elmRef: ElementRef, private sanitizer: DomSanitizer) {}
+	constructor(
+    private _elmRef: ElementRef,
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private sanitizer: DomSanitizer,
+    private _global: GlobalRef) {}
 
 	ngOnInit(): void {
     //check if monthTOShow should be equal or more then 1
@@ -149,8 +185,18 @@ export class CalendarComponent implements OnInit, OnChanges {
     if (this.maxDate) {
 			this.maxDate = new Date(this.maxDate);
 		} else {
-      //default 20 years from the current date if max Date is not given.
+      //default 20 years from the min date if max Date is not given.
 			this.maxDate = new Date(this.minDate.setHours(0, 0, 0, 0) + 630720000000);
+    }
+
+    //code to set the input width according to selection
+    if (!this.enableRangeSelect) {
+      this.uiInputSettings.fromDateWidth = '100%';
+    }
+
+    if (this.uiSettings.verticalInputAlignment && this.enableRangeSelect) {
+      this.uiInputSettings.fromDateWidth = '100%';
+      this.uiInputSettings.toDateWidth = '100%';
     }
 
     //check if minDate is less then max date and vice versa
@@ -267,7 +313,7 @@ export class CalendarComponent implements OnInit, OnChanges {
             dayObject.isSelected = true;
             this.rangeSelected.to = {'day': dayObject, 'date': dayObject.year + '-' + (dayObject.month + 1) + '-' + dayObject.day};
             this.dateHovered(dayObject, true);
-            // scope.calenderHideFlag = true;
+            this.calenderHideFlag = true;
           }
         }
       }
@@ -384,8 +430,15 @@ export class CalendarComponent implements OnInit, OnChanges {
 
   //function to close the autocomplete list when clicked outside. (binded with view)
   public closeCalender(event: any): void {
-    this.calenderHideFlag = true;
+    // this.calenderHideFlag = true;
     this.removeDateHovered();
+  }
+
+  public closeAutocomplete(event: any): any {
+    if (!this._elmRef.nativeElement.contains(event.target)) {
+      this.calenderHideFlag = true;
+      this.removeDateHovered();
+    }
   }
 
   //components callbacks
@@ -456,6 +509,7 @@ export class CalendarComponent implements OnInit, OnChanges {
         'isCurrent': this.isCurrentDate(dayNumber, month, year),
         'isSelected': false,
         'isHovered': false,
+        'isMouseHover': false,
         'isDateRangeExceeded': false,
         'data': {
           'key': '',
@@ -471,7 +525,7 @@ export class CalendarComponent implements OnInit, OnChanges {
     }
 
     private setMonthly(month: number, year: number): void {
-      // function to set a month data in an object againt the passed argument value.
+      // function to set a month data in an object against the passed argument value.
       if (!this.dateObj[year + '-' + month]) {
         this.dateObj[year + '-' + month] = [];
         let index: number = 0;
@@ -657,11 +711,18 @@ export class CalendarComponent implements OnInit, OnChanges {
     private fromDatePopupOpenCoords(): void {
       let elem: any = this._elmRef.nativeElement.querySelector('.js-calenderFromTime');
       if (elem) {
-        let coords: any = elem.getBoundingClientRect();
+        let coords: any = this.getElemStyle(elem);
+        console.log(coords);
         if (this.uiSettings.verticalInputAlignment || !this.enableRangeSelect) {
-          this.calenderPosition = {'top': coords.height + 20, 'left': 0};
+          this.calenderPosition = {
+            'top': coords.height + 10,
+            'left': coords.marginLeft + coords.paddingLeft
+          };
         } else {
-          this.calenderPosition = {'top': coords.height + 10, 'left': 0};
+          this.calenderPosition = {
+            'top': coords.height + coords.paddingTop + coords.marginTop + 10,
+            'left': coords.marginLeft + coords.paddingLeft
+          };
         }
       }
 
@@ -670,15 +731,41 @@ export class CalendarComponent implements OnInit, OnChanges {
     private toDatePopupOpenCoords(): void {
       let elem: any = this._elmRef.nativeElement.querySelector('.js-calenderToTime');
       if (elem) {
-        let coords: any = elem.getBoundingClientRect();
-        let coordsFrom: any = this._elmRef.nativeElement.querySelector('.js-calenderFromTime').getBoundingClientRect();
+        let coords: any = this.getElemStyle(elem);
+        let fromElem: any = this._elmRef.nativeElement.querySelector('.js-calenderFromTime');
+        let coordsFrom: any = this.getElemStyle(fromElem);
         if (this.uiSettings.verticalInputAlignment) {
-          this.calenderPosition = {'top': (coords.height + coordsFrom.height) + 40, 'left': 0};
+          this.calenderPosition = {
+            'top': coords.height + coordsFrom.height + coords.paddingTop + coords.marginTop + coordsFrom.paddingTop + coordsFrom.paddingBottom + coordsFrom.marginTop + coordsFrom.marginBottom + 10,
+            'left': coords.paddingLeft + coords.marginLeft
+          };
         } else {
-          this.calenderPosition = {'top': coords.height + 10, 'left': coordsFrom.width + 2};
+          this.calenderPosition = {
+            'top': coords.height + coords.paddingTop + coords.marginTop + 10,
+            'left': coordsFrom.width + coords.paddingLeft + coords.marginLeft + coordsFrom.paddingLeft + coordsFrom.paddingRight + coordsFrom.marginLeft + coordsFrom.marginRight};
         }
       }
 
+    }
+
+    private getElemStyle(elem: any): any {
+      if (isPlatformBrowser(this.platformId)) {
+        let cords: any = elem.getBoundingClientRect();
+        let _window: any = this._global.nativeGlobal;
+        let styles: any = elem.currentStyle || _window.getComputedStyle(elem);
+        cords.height = parseFloat(styles.height);
+        cords.marginLeft = parseFloat(styles.marginLeft);
+        cords.marginRight = parseFloat(styles.marginRight);
+        cords.paddingRight = parseFloat(styles.paddingRight);
+        cords.paddingLeft = parseFloat(styles.paddingLeft);
+        cords.marginTop = parseFloat(styles.marginTop);
+        cords.marginBottom = parseFloat(styles.marginBottom);
+        cords.paddingTop = parseFloat(styles.paddingTop);
+        cords.paddingBottom = parseFloat(styles.paddingBottom);
+        return cords;
+      } else {
+        return {};
+      }
     }
 
     private generateYears(minYear: number, maxYear: number): void {

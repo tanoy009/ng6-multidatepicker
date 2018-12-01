@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class Ng6CalendarDateFormatPipe implements PipeTransform {
   transform(value: any, args1?: number): string {
   	value = value.split('-');
-  	let days: any = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thrusday', 'Friday', 'Satday'];
+  	let days: any = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   	let filter: string = '';
 		let monthArr: any = [{
       'text': 'January',
