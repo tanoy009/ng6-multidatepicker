@@ -1,6 +1,6 @@
 {
   "name": "ng6-multidatepicker",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "angular 6 compatible multi purpose date range picker calendar and AOT enabled",
   "main": "./bundles/ng6-multidatepicker.umd.js",
   "module": "./index.js",
