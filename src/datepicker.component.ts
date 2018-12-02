@@ -2,7 +2,7 @@
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import { GlobalRef } from './windowRef.service';
-import { CalendarService } from './calendar.service';
+import { DatepickerService } from './datepicker.service';
 import { Observable } from 'rxjs';
 
 export interface  IuiSettings {
@@ -47,7 +47,7 @@ export interface IdateObject {
 }
 
 @Component({
-  selector: 'ng6multi-calendar',
+  selector: 'ng6multi-datepicker',
   template: `<div class="calendar">
     <div class="calender--input-wrapper" [ngClass]="{'calender--input-alignment': uiSettings.verticalInputAlignment}" *ngIf="enableRangeSelect">
       <div class="calender__input js-calenderFromTime" [ngStyle]="{'margin': uiInputSettings.fromDateMargin,'width': uiInputSettings.fromDateWidth}">
@@ -556,7 +556,7 @@ export interface IdateObject {
     '(document:click)': 'closeAutocomplete($event)',
   }
 })
-export class CalendarComponent implements OnInit, OnChanges {
+export class DatepickerComponent implements OnInit, OnChanges {
   @Input() uiSettings: IuiSettings = {
     dateDisplayFormat: '',
     gridLayout: false,
@@ -696,7 +696,7 @@ export class CalendarComponent implements OnInit, OnChanges {
     @Inject(PLATFORM_ID) private platformId: Object,
     private sanitizer: DomSanitizer,
     private _global: GlobalRef,
-    private _calendarService: CalendarService) {}
+    private _datepickerService: DatepickerService) {}
 
 	ngOnInit(): void {
     //initializing user input values
@@ -771,7 +771,7 @@ export class CalendarComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (this.isExternalDataAvailable && changes.promiseData && changes.promiseData.currentValue) {
       this.promiseData.subscribe(data => {
-        this._calendarService.processExternalData(data).subscribe((processedData) => {
+        this._datepickerService.processExternalData(data).subscribe((processedData) => {
           this.externalData = processedData;
           this.integrateAsyncDataWithCurrentView();
         });

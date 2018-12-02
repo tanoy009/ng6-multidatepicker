@@ -1,14 +1,14 @@
 ﻿# Angular 6 compatible Normal Calender along with Date range Calender with support of external data view
-[![Build Status](https://travis-ci.org/tanoy009/ng6-multicalendar.svg?branch=master)](https://travis-ci.org/tanoy009/ng6-multicalendar)
-[![codecov](https://codecov.io/gh/tanoy009/ng6-multicalendar/branch/master/graph/badge.svg)](https://codecov.io/gh/tanoy009/ng6-multicalendar)
-[![npm version](https://badge.fury.io/js/ng6-multicalendar.svg)](http://badge.fury.io/js/ng6-multicalendar)
-[![devDependency Status](https://david-dm.org/tanoy009/ng6-multicalendar/dev-status.svg)](https://david-dm.org/tanoy009/ng6-multicalendar?type=dev)
-[![GitHub issues](https://img.shields.io/github/issues/tanoy009/ng6-multicalendar.svg)](https://github.com/tanoy009/ng6-multicalendar/issues)
-[![GitHub stars](https://img.shields.io/github/stars/tanoy009/ng6-multicalendar.svg)](https://github.com/tanoy009/ng6-multicalendar/stargazers)
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/tanoy009/ng6-multicalendar/master/LICENSE)
+[![Build Status](https://travis-ci.org/tanoy009/ng6-multidatepicker.svg?branch=master)](https://travis-ci.org/tanoy009/ng6-multidatepicker)
+[![codecov](https://codecov.io/gh/tanoy009/ng6-multidatepicker/branch/master/graph/badge.svg)](https://codecov.io/gh/tanoy009/ng6-multidatepicker)
+[![npm version](https://badge.fury.io/js/ng6-multidatepicker.svg)](http://badge.fury.io/js/ng6-multidatepicker)
+[![devDependency Status](https://david-dm.org/tanoy009/ng6-multidatepicker/dev-status.svg)](https://david-dm.org/tanoy009/ng6-multidatepicker?type=dev)
+[![GitHub issues](https://img.shields.io/github/issues/tanoy009/ng6-multidatepicker.svg)](https://github.com/tanoy009/ng6-multidatepicker/issues)
+[![GitHub stars](https://img.shields.io/github/stars/tanoy009/ng6-multidatepicker.svg)](https://github.com/tanoy009/ng6-multidatepicker/stargazers)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/tanoy009/ng6-multidatepicker/master/LICENSE)
 
 ## Demo
-https://tanoy009.github.io/ng6-multicalendar/
+https://tanoy009.github.io/ng6-multidatepicker/
 
 ## Test Case.
 In Pipeline will be updated in a while.
@@ -29,18 +29,18 @@ angular 6 compatible multipurpose calendar with external data integration suppor
 
 Install through npm:
 ```
-npm install --save ng6-multicalendar
+npm install --save ng6-multidatepicker
 ```
 
 Then include in your apps module:
 
 ```typescript
 import { Component, NgModule } from '@angular/core';
-import { Ng6CalendarModule } from 'ng6-multicalendar';
+import { Ng6DatepickerModule } from 'ng6-multidatepicker';
 
 @NgModule({
   imports: [
-    Ng6CalendarModule.forRoot()
+    Ng6DatepickerModule.forRoot()
   ]
 })
 export class MyModule {}
@@ -51,7 +51,7 @@ Finally use in one of your apps components:
 import { Component } from '@angular/core';
 
 @Component({
-  template: '<ng6multi-calendar (dateCallback)="dateCallback($event)"></ng6multi-calendar>'
+  template: '<ng6multi-datepicker (dateCallback)="dateCallback($event)"></ng6multi-datepicker>'
 })
 export class MyComponent {
 	dateCallback(selectedDate: any) {
@@ -109,7 +109,7 @@ List of settings that can be used to configure the module (all config. are optio
   import { Observable } from 'rxjs';
 
   @Component({
-    template: '<ng6multi-calendar [promiseData]="ObservableObj" (externalDataCallback)="externalDataFetchCallback($event)"></ng6multi-calendar>'
+    template: '<ng6multi-datepicker [promiseData]="ObservableObj" (externalDataCallback)="externalDataFetchCallback($event)"></ng6multi-datepicker>'
   })
   export class MyComponent {
     public ObservableObj: Observable<any>;
@@ -150,11 +150,11 @@ List of settings that can be used to configure the module (all config. are optio
 
 ### You can use it with system js as well
 
-`'ng6-multicalendar': 'npm:ng6-multicalendar/bundles/ng6-multicalendar.umd.js'`
+`'ng6-multidatepicker': 'npm:ng6-multidatepicker/bundles/ng6-multidatepicker.umd.js'`
 
 ### Usage without a module bundler
 ```
-<script src="node_modules/ng6-multicalendar/bundles/ng6-multicalendar.umd.js"></script>
+<script src="node_modules/ng6-multidatepicker/bundles/ng6-multidatepicker.umd.js"></script>
 <script>
     // everything is exported ng6Calendar namespace
 </script>
@@ -162,7 +162,7 @@ List of settings that can be used to configure the module (all config. are optio
 
 ## Documentation
 All documentation is auto-generated from the source via [compodoc](https://compodoc.github.io/compodoc/) and can be viewed here:
-https://tanoy009.github.io/ng6-multicalendar/docs/
+https://tanoy009.github.io/ng6-multidatepicker/docs/
 
 ## Development
 

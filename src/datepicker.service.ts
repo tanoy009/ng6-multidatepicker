@@ -4,7 +4,7 @@ import { GlobalRef } from './windowRef.service';
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class CalendarService {
+export class DatepickerService {
   constructor(@Inject(PLATFORM_ID) private platformId: Object,
   private _global: GlobalRef) {
 

@@ -4,14 +4,14 @@ import {
   TestBed
 } from '@angular/core/testing';
 import { expect } from 'chai';
-import { Ng6CalendarModule } from '../src';
+import { Ng6DatepickerModule } from '../src';
 
-describe('ng6-multicalendar component', () => {
+describe('ng6-multidatepicker component', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        Ng6CalendarModule.forRoot()
+        Ng6DatepickerModule.forRoot()
       ]
     });
   });

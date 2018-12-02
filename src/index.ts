@@ -1,1 +1,1 @@
-export * from './ng-6-calendar.module';
+export * from './ng-6-datepicker.module';

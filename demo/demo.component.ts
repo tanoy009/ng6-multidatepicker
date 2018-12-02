@@ -4,7 +4,7 @@ import { asElementData } from '@angular/core/src/view';
 import { sanitizeIdentifier } from '@angular/compiler';
 
 @Component({
-  selector: 'ng6multi-calendar-demoapp',
+  selector: 'ng6multi-datepicker-demoapp',
   templateUrl: './demo/demo.component.html'
 })
 export class DemoComponent {

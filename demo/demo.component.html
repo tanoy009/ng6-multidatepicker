@@ -10,7 +10,7 @@
 		  		<code>NONE (All default settings are used)</code>
 		  	</div>
 		  	<div>
-		    	<ng6multi-calendar (dateCallback)="dateCallback1($event)"></ng6multi-calendar>
+		    	<ng6multi-datepicker (dateCallback)="dateCallback1($event)"></ng6multi-datepicker>
 		    </div>
 		    <div class="well" style="float: left;width: 100%;margin-top: 20px;">
 		    	<p>Sample Output:</p>
@@ -30,11 +30,11 @@
 		  		<code style="word-wrap: break-word;" [innerHTML]="getCodeHtml(userSettings2)"></code>
 		  	</div>
 		  	<div>
-          <ng6multi-calendar
+          <ng6multi-datepicker
           [uiInputSettings] = "userSettings2.uiInputSettings"
           [enableRangeSelect]="userSettings2.enableRangeSelect"
           (dateCallback)="dateCallback2($event)">
-        </ng6multi-calendar>
+        </ng6multi-datepicker>
 		    </div>
 		    <div class="well" style="float: left;width: 100%;margin-top: 20px;">
 		    	<p>Sample Output:</p>
@@ -56,13 +56,13 @@
 		  		<code style="word-wrap: break-word;" [innerHTML]="getCodeHtml(userSettings3)"></code>
 		  	</div>
 		  	<div>
-          <ng6multi-calendar
+          <ng6multi-datepicker
             [minDate] = "userSettings3.minDate"
             [maxDate] = "userSettings3.maxDate"
             [defaultFromDate] = "userSettings3.defaultFromDate"
             [defaultToDate] = "userSettings3.defaultToDate"
             (dateCallback)="dateCallback3($event)">
-          </ng6multi-calendar>
+          </ng6multi-datepicker>
 		    </div>
 		    <div class="well" style="float: left;width: 100%;margin-top: 20px;">
 		    	<p>Sample Output:</p>
@@ -83,10 +83,10 @@
           <p>Above 'maximumDayInRange' is in days (15 means 15 days)</p>
 		  	</div>
 		  	<div>
-		    	<ng6multi-calendar
+		    	<ng6multi-datepicker
             [maximumDayInRange] = "userSettings4.maximumDayInRange"
             (dateCallback)="dateCallback4($event)">
-          </ng6multi-calendar>
+          </ng6multi-datepicker>
 		    </div>
 		    <div class="well" style="float: left;width: 100%;margin-top: 20px;">
 		    	<p>Sample Output:</p>
@@ -108,10 +108,10 @@
 		  		<code style="word-wrap: break-word;" [innerHTML]="getCodeHtml(userSettings5)"></code>
 		  	</div>
 		  	<div>
-          <ng6multi-calendar
+          <ng6multi-datepicker
             [uiSettings] = "userSettings5.uiSettings"
             (dateCallback)="dateCallback5($event)">
-          </ng6multi-calendar>
+          </ng6multi-datepicker>
 		    </div>
 		    <div class="well" style="float: left;width: 100%;margin-top: 20px;">
 		    	<p>Sample Output:</p>
@@ -131,10 +131,10 @@
 		  		<code style="word-wrap: break-word;" [innerHTML]="getCodeHtml(userSettings6)"></code>
 		  	</div>
 		  	<div>
-          <ng6multi-calendar
+          <ng6multi-datepicker
             [uiSettings] = "userSettings6.uiSettings"
             (dateCallback)="dateCallback6($event)">
-          </ng6multi-calendar>
+          </ng6multi-datepicker>
 		    </div>
 		    <div class="well" style="float: left;width: 100%;margin-top: 20px;">
 		    	<p>Sample Output:</p>
@@ -156,10 +156,10 @@
 		  		<code style="word-wrap: break-word;" [innerHTML]="getCodeHtml(userSettings7)"></code>
 		  	</div>
 		  	<div>
-          <ng6multi-calendar
+          <ng6multi-datepicker
             [uiSettings] = "userSettings7.uiSettings"
             (dateCallback)="dateCallback7($event)">
-          </ng6multi-calendar>
+          </ng6multi-datepicker>
 		    </div>
 		    <div class="well" style="float: left;width: 100%;margin-top: 20px;">
 		    	<p>Sample Output:</p>
@@ -179,10 +179,10 @@
 		  		<code style="word-wrap: break-word;" [innerHTML]="getCodeHtml(userSettings8)"></code>
 		  	</div>
 		  	<div>
-          <ng6multi-calendar
+          <ng6multi-datepicker
             [uiSettings] = "userSettings8.uiSettings"
             (dateCallback)="dateCallback8($event)">
-          </ng6multi-calendar>
+          </ng6multi-datepicker>
 		    </div>
 		    <div class="well" style="float: left;width: 100%;margin-top: 20px;">
 		    	<p>Sample Output:</p>
@@ -204,10 +204,10 @@
 		  		<code style="word-wrap: break-word;" [innerHTML]="getCodeHtml(userSettings9)"></code>
 		  	</div>
 		  	<div>
-          <ng6multi-calendar
+          <ng6multi-datepicker
             [uiInputSettings] = "userSettings9.uiInputSettings"
             (dateCallback)="dateCallback9($event)">
-          </ng6multi-calendar>
+          </ng6multi-datepicker>
 		    </div>
 		    <div class="well" style="float: left;width: 100%;margin-top: 20px;">
 		    	<p>Sample Output:</p>
@@ -227,11 +227,11 @@
 		  		<code style="word-wrap: break-word;" [innerHTML]="getCodeHtml(userSettings10)"></code>
 		  	</div>
 		  	<div>
-          <ng6multi-calendar
+          <ng6multi-datepicker
             [uiSettings] = "userSettings10.uiSettings"
             [uiInputSettings] = "userSettings10.uiInputSettings"
             (dateCallback)="dateCallback10($event)">
-          </ng6multi-calendar>
+          </ng6multi-datepicker>
 		    </div>
 		    <div class="well" style="float: left;width: 100%;margin-top: 20px;">
 		    	<p>Sample Output:</p>
@@ -253,14 +253,14 @@
 		  		<code style="word-wrap: break-word;" [innerHTML]="getCodeHtml(userSettings11)"></code>
 		  	</div>
 		  	<div>
-          <ng6multi-calendar
+          <ng6multi-datepicker
             [uiSettings] = "userSettings11.uiSettings"
             [uiInputSettings] = "userSettings11.uiInputSettings"
             [isExternalDataAvailable]="userSettings11.isExternalDataAvailable"
             [promiseData]="ObservableObj"
             (dateCallback)="dateCallback11($event)"
             (externalDataCallback)="externalDataFetchCallback($event)">
-          </ng6multi-calendar>
+          </ng6multi-datepicker>
         </div>
         <div class="well" style="float: left;width: 100%;margin-top: 20px;">
 		    	<p>External data sample input Format:</p>

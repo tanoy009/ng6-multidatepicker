@@ -1,8 +1,8 @@
 {
-  "name": "ng6-multicalendar",
+  "name": "ng6-multidatepicker",
   "version": "0.0.1",
   "description": "angular 6 compatible multi purpose date range calendar and AOT enabled",
-  "main": "./bundles/ng6-multicalendar.umd.js",
+  "main": "./bundles/ng6-multidatepicker.umd.js",
   "module": "./index.js",
   "typings": "./index.d.ts",
   "scripts": {
@@ -28,7 +28,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tanoy009/ng6-multicalendar.git"
+    "url": "git+https://github.com/tanoy009/ng6-multidatepicker.git"
   },
   "keywords": [
     "angular6",
@@ -51,9 +51,9 @@
   "author": "tanoy kumar maity",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tanoy009/ng6-multicalendar/issues"
+    "url": "https://github.com/tanoy009/ng6-multidatepicker/issues"
   },
-  "homepage": "https://github.com/tanoy009/ng6-multicalendar#readme",
+  "homepage": "https://github.com/tanoy009/ng6-multidatepicker#readme",
   "devDependencies": {
     "@angular/common": "^6.1.10",
     "@angular/compiler": "^6.1.10",
