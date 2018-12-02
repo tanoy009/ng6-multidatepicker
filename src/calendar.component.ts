@@ -48,44 +48,546 @@ export interface IdateObject {
 
 @Component({
   selector: 'ng6multi-calendar',
-  templateUrl: './src/calendar.html',
-  styleUrls: ['./src/calendar.css'],
+  template: `<div class="calendar">
+    <div class="calender--input-wrapper" [ngClass]="{'calender--input-alignment': uiSettings.verticalInputAlignment}" *ngIf="enableRangeSelect">
+      <div class="calender__input js-calenderFromTime" [ngStyle]="{'margin': uiInputSettings.fromDateMargin,'width': uiInputSettings.fromDateWidth}">
+        <label *ngIf="!uiInputSettings.fromDateLabelHide">{{uiInputSettings.fromDateLabelText}}</label>
+        <input type="text" readonly (click)="fromDateClicked()"  [value]="rangeSelected.from.date | date: uiSettings.dateDisplayFormat" class="calender--input" placeholder="{{uiInputSettings.fromDatePlaceholder}}"/>
+      </div>
+      <div class="calender__input js-calenderToTime" [ngStyle]="{'margin': uiInputSettings.toDateMargin,'width': uiInputSettings.toDateWidth}">
+        <label *ngIf="!uiInputSettings.toDateLabelHide">{{uiInputSettings.toDateLabelText}}</label>
+        <input type="text" readonly (click)="toDateClicked()" class="calender--input" [value]="rangeSelected.to.date | date: uiSettings.dateDisplayFormat" placeholder="{{uiInputSettings.toDatePlaceholder}}"/>
+      </div>
+    </div>
+    <div class="calender--input-wrapper calender--input-alignment" *ngIf="!enableRangeSelect">
+      <div class="calender__input js-calenderFromTime">
+        <label *ngIf="!uiInputSettings.fromDateLabelHide">{{uiInputSettings.fromDateLabelText}}</label>
+        <input type="text" readonly (click)="fromDateClicked()"  [value]="userDateSelected.dateInMillisecond | date: uiSettings.dateDisplayFormat" class="calender--input" placeholder="{{uiInputSettings.fromDatePlaceholder}}"/>
+      </div>
+    </div>
+    <div [hidden]="calenderHideFlag" class="calendar__wrapper calender--triangle" [ngStyle]="{'width': ''+ defaultCalenderWidth*uiSettings.monthToShow +'px','top': calenderPosition.top+'px','left': calenderPosition.left+'px'}" [ngClass]="{'calendar__no-grid': !uiSettings.gridLayout,'calendar__disable-dropdown': uiSettings.disableYearMonthDropdown}">
+      <div class="container calendar__heading calendar--full-width">
+        <div class="calendar--full-width">
+          <div class="calendar__arrow-left">
+            <button type="button" [disabled]="(selectYearDropdown <= startYear) && (selectMonthDropdown === 0)" class="calendar--button" (click)='setPrevMonth()'><i></i></button>
+          </div>
+          <div class="calendar__month" *ngIf="!uiSettings.disableYearMonthDropdown">
+            <div class="custom-select">
+              <select  [(ngModel)]="selectMonthDropdown" (change)="monthChange($event.target.value)">
+                <option *ngFor="let month of months" [value]="month.value">{{month.text}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="calendar__year" *ngIf="!uiSettings.disableYearMonthDropdown">
+            <div class="custom-select">
+              <select [(ngModel)]="selectYearDropdown" (change)="yearChange($event.target.value)">
+                <option *ngFor="let year of years" [value]="year">{{year}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="calendar__arrow-right">
+              <button type="button" class="calendar--button" [disabled]="(selectYearDropdown >= maxYear) && (selectMonthDropdown === 11)" (click)='setNextMonth()'> <i></i></button>
+          </div>
+        </div>
+      </div>
+      <div class="calendar__container">
+        <table class="calendar__table calendar--full-width" *ngFor="let year of noOfCalenderView" [ngStyle]="{'width': ''+ individualCalendarWidth +'%','font-size': uiSettings.fontSize+'px'}">
+          <thead>
+            <tr>
+              <th colspan="7" class="calendar__table--date">{{year | ng6CalendarDateFormat}}</th>
+            </tr>
+            <tr>
+              <th *ngFor="let day of defaultDays" class="text-center">{{day}}</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr *ngFor="let days of dateObj[year]">
+                <td *ngFor="let day of days;let i = index"
+                  [ngClass]="{'disabled':day.isDisabled,'current-day':day.isCurrent,'selected-date':day.isSelected,'continue-date': day.isHovered,'cell-stripe': day.isDateRangeExceeded}"
+                  [style.background-color]="day.isSelected ? uiSettings.selectedCellColor : day.isHovered || day.isMouseHover ? uiSettings.hoverCellColor : ''">
+                  <div *ngIf="day.day" class="calender-tooltip" (click)="!day.isDisabled && dateClicked(day)" (mouseover)='dateHovered(day);day.isMouseHover = true' (mouseout)="day.isMouseHover = false">
+                    <div class="text-center monthly-date" [ngStyle]="{'width': uiSettings.individualCalendarCellWidth+'px','height': uiSettings.individualCalendarCellHeight+'px'}">
+                      <span>{{day.day}}</span>
+                      <span *ngIf="day.data.value" class="monthly-date-val" [ngStyle]="{'color': day.data.color}">{{day.data.value}}</span>
+
+                      <!-- tooltip -->
+                      <div *ngIf="!uiSettings.disableTooltip" [hidden]="!(day.isDateRangeExceeded || day.data.additionalTooltipMsg)" class="calender-tooltiptext calender-tooltip-bottom">
+                        <div *ngIf="day.data.additionalTooltipMsg" class="calender-tooltip--extra" [innerHTML]="day.data.additionalTooltipMsg"></div>
+                        <div *ngIf="day.isDateRangeExceeded && day.data.additionalTooltipMsg"class="calender-tooltip--separator"></div>
+                        <div *ngIf="day.isDateRangeExceeded" class="calender-tooltip--no-selection">Max Date Range Selection allowed upto {{maximumDayInRange}} days</div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <div>
+  `,
+  styles: [`.calendar {
+    background-color: #fff;
+    width: 100%;
+    min-width: 352px;
+    position: relative;
+  }
+
+  .calendar--full-width {
+      width: 100%;
+      display: flex;
+  }
+
+  .calendar__container {
+    display: flex;
+  }
+
+  .calendar__wrapper {
+    box-shadow: 0 0 2px #ccc;
+    background-color: #fff;
+    padding: 10px 8px 8px 8px;
+    position: absolute;
+    z-index: 99;
+  }
+
+  .calendar--button {
+      width: 100%;
+      height: 100%;
+      background: none;
+      border: 1px solid #ccc;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+  }
+
+  .calendar--button:focus {
+    outline: none;
+  }
+
+  .calendar button[disabled] {
+      background-color: #ccc;
+      border-color: #ccc;
+  }
+
+  .calender--triangle:before,
+  .calender--triangle:after {
+    content: "";
+    border-style: solid;
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: 10px;
+    border-radius: 1px;
+  }
+
+  .calender--triangle:before {
+    border-width: 0px 11px 11px 11px;
+    border-color: transparent transparent #ccc transparent;
+    top: -11px;
+  }
+
+  .calender--triangle:after {
+    border-width: 0px 11px 11px 11px;
+    top: -10px;
+    border-color: transparent transparent #fff transparent;
+  }
+
+  .calendar__arrow-left {
+      width: 50px;
+      height: 40px;
+  }
+
+  .calendar__arrow-left i {
+      background-image: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCA0OTIgNDkyIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA0OTIgNDkyOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjE2cHgiIGhlaWdodD0iMTZweCI+CjxnPgoJPGc+CgkJPHBhdGggZD0iTTE5OC42MDgsMjQ2LjEwNEwzODIuNjY0LDYyLjA0YzUuMDY4LTUuMDU2LDcuODU2LTExLjgxNiw3Ljg1Ni0xOS4wMjRjMC03LjIxMi0yLjc4OC0xMy45NjgtNy44NTYtMTkuMDMybC0xNi4xMjgtMTYuMTIgICAgQzM2MS40NzYsMi43OTIsMzU0LjcxMiwwLDM0Ny41MDQsMHMtMTMuOTY0LDIuNzkyLTE5LjAyOCw3Ljg2NEwxMDkuMzI4LDIyNy4wMDhjLTUuMDg0LDUuMDgtNy44NjgsMTEuODY4LTcuODQ4LDE5LjA4NCAgICBjLTAuMDIsNy4yNDgsMi43NiwxNC4wMjgsNy44NDgsMTkuMTEybDIxOC45NDQsMjE4LjkzMmM1LjA2NCw1LjA3MiwxMS44Miw3Ljg2NCwxOS4wMzIsNy44NjRjNy4yMDgsMCwxMy45NjQtMi43OTIsMTkuMDMyLTcuODY0ICAgIGwxNi4xMjQtMTYuMTJjMTAuNDkyLTEwLjQ5MiwxMC40OTItMjcuNTcyLDAtMzguMDZMMTk4LjYwOCwyNDYuMTA0eiIgZmlsbD0iIzAwMDAwMCIvPgoJPC9nPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo=);
+      background-size: cover;
+      height: 20px;
+      width: 20px;
+      display: inline-block;
+  }
+
+  .calendar__arrow-right {
+      width: 50px;
+      height: 40px;
+  }
+
+  .calendar__arrow-right i {
+      background-image: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCA0OTIuMDA0IDQ5Mi4wMDQiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDQ5Mi4wMDQgNDkyLjAwNDsiIHhtbDpzcGFjZT0icHJlc2VydmUiIHdpZHRoPSIxNnB4IiBoZWlnaHQ9IjE2cHgiPgo8Zz4KCTxnPgoJCTxwYXRoIGQ9Ik0zODIuNjc4LDIyNi44MDRMMTYzLjczLDcuODZDMTU4LjY2NiwyLjc5MiwxNTEuOTA2LDAsMTQ0LjY5OCwwcy0xMy45NjgsMi43OTItMTkuMDMyLDcuODZsLTE2LjEyNCwxNi4xMiAgICBjLTEwLjQ5MiwxMC41MDQtMTAuNDkyLDI3LjU3NiwwLDM4LjA2NEwyOTMuMzk4LDI0NS45bC0xODQuMDYsMTg0LjA2Yy01LjA2NCw1LjA2OC03Ljg2LDExLjgyNC03Ljg2LDE5LjAyOCAgICBjMCw3LjIxMiwyLjc5NiwxMy45NjgsNy44NiwxOS4wNGwxNi4xMjQsMTYuMTE2YzUuMDY4LDUuMDY4LDExLjgyNCw3Ljg2LDE5LjAzMiw3Ljg2czEzLjk2OC0yLjc5MiwxOS4wMzItNy44NkwzODIuNjc4LDI2NSAgICBjNS4wNzYtNS4wODQsNy44NjQtMTEuODcyLDcuODQ4LTE5LjA4OEMzOTAuNTQyLDIzOC42NjgsMzg3Ljc1NCwyMzEuODg0LDM4Mi42NzgsMjI2LjgwNHoiIGZpbGw9IiMwMDAwMDAiLz4KCTwvZz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K);
+      background-size: cover;
+      height: 20px;
+      width: 20px;
+      display: inline-block;
+  }
+
+  .calendar__month {
+      width: calc(50% - 50px);
+  }
+
+  .calendar__year {
+      width: calc(50% - 50px);
+  }
+
+  .calendar .current-day .monthly-date {
+      color: blue;
+      font-weight: 700;
+  }
+
+  .calendar__heading {
+      padding: 0;
+      margin-bottom: 10px;
+      position: relative;
+  }
+
+  .calendar__table {
+      border-collapse: collapse;
+      display: table;
+      border-spacing: 0px;
+  }
+
+  .calendar__table td,
+  .calendar__table th {
+      padding: 9px 0;
+      text-align: center;
+      vertical-align: top;
+      border-top: 1px solid #eceeef;
+  }
+
+
+  .calendar__table thead {
+      display: table-header-group;
+      vertical-align: middle;
+      border-color: inherit;
+  }
+
+  .calendar__table tr {
+      display: table-row;
+      vertical-align: inherit;
+      border-color: inherit;
+  }
+
+  .calendar__table thead th {
+      vertical-align: bottom;
+      border-bottom: 2px solid #eceeef;
+  }
+
+  .calendar__table th {
+      font-size: 80%;
+  }
+
+  .calendar__table tbody td {
+      transition: all 0.3s ease-in-out;
+      line-height: 1;
+      padding: 0;
+      position: relative;
+  }
+
+  .calendar__table tbody {
+      display: table-row-group;
+      vertical-align: middle;
+      border-color: inherit;
+  }
+
+  .calendar__table tr {
+      display: table-row;
+      vertical-align: inherit;
+      border-color: inherit;
+  }
+
+  .calendar .calendar__table td,
+  .calendar .calendar__table th {
+      border: 1px solid #eceeef;
+  }
+
+  .calendar__table tbody td:hover {
+      cursor: pointer;
+  }
+
+  .calendar__table tbody td:hover .monthly-date {
+      color: #353535;
+  }
+
+  .calendar__table--date {
+      font-size: 16px !important;
+      font-weight: 400;
+      line-height: 1.1;
+  }
+
+  .calendar__table .text-center {
+      text-align: center;
+  }
+
+  .calendar__table .price {
+      margin-top: 10px;
+  }
+
+  .calendar__table .price span,
+  .calendar__table .quantity span {
+      width: 100%;
+      font-weight: 400;
+      opacity: 0.9;
+      font-size: 13px;
+  }
+
+  .calendar__table .monthly-date {
+      font-size: 76%;
+      font-weight: 400;
+      line-height: 1;
+      padding: 5px 0;
+      height: 35px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+  }
+
+  .calendar__table .monthly-date span {
+      display: inline-block;
+      transform: scale(1, 1.5);
+      -webkit-transform: scale(1, 1.5);
+      /* Safari and Chrome */
+      -moz-transform: scale(1, 1.5);
+      /* Firefox */
+      -ms-transform: scale(1, 1.5);
+      /* IE 9+ */
+      -o-transform: scale(1, 1.5);
+      /* Opera */
+  }
+
+  .calendar__table .monthly-date-val {
+    font-size: 10px;
+    overflow: hidden;
+    width: 100%;
+    text-overflow: ellipsis;
+    transform: scale(1, 1) !important;
+      -webkit-transform: scale(1, 1) !important;
+      /* Safari and Chrome */
+      -moz-transform: scale(1, 1) !important;
+      /* Firefox */
+      -ms-transform: scale(1, 1) !important;
+      /* IE 9+ */
+      -o-transform: scale(1, 1) !important;
+      /* Opera */
+  }
+
+  .calendar__table .continue-date .monthly-date {
+      color: #047b8d;
+  }
+
+  .calendar__table .disabled {
+      cursor: not-allowed !important;
+      color: #949494;
+  }
+
+  .calendar__table .disabled:hover {
+      background-color: transparent !important;
+  }
+
+  .calendar .custom-select {
+    border: 1px solid #ccc;
+  }
+
+  .calendar .custom-select select{
+    margin: 0;
+    width: 100%;
+    text-align: center;
+    text-align-last: center;
+    height: 38px;
+    font-size: 17px;
+    background: none;
+    border: none;
+  }
+
+  .calendar .selected-date .monthly-date {
+      color: #fff !important;
+  }
+
+  .calender--input-wrapper {
+    display: flex;
+    padding-bottom: 10px;
+  }
+
+  .calender__input {
+    width: 50%;
+  }
+
+  .calender--input {
+    width: 100%;
+    height: 40px;
+    padding: 4px 8px;
+    margin-top: 8px;
+    box-sizing: border-box;
+  }
+
+  .calendar .cell-stripe {
+    background-image: repeating-linear-gradient(45deg, #dbdbdb, #dbdbdb 10px, #ecebeb 10px, #ecebeb 20px);
+  }
+
+  .calender--input-alignment {
+    flex-direction: column;
+  }
+
+  .calender--input-alignment .calender__input{
+    width: 100%;
+    margin: 10px 0;
+  }
+
+  /* css code for calendar tooltip */
+
+  .calender-tooltip {
+    position: relative;
+    /*display: inline-block;*/
+  }
+  .calender-tooltip .calender-tooltiptext {
+    visibility: hidden;
+    position: absolute;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    font-size: 10px;
+    padding: 5px;
+    border-radius: 2px;
+    z-index: 1;
+    opacity: 0;
+    transition: all 0.3s;
+    transform: scale(1, 1);
+    -webkit-transform: scale(1, 1);
+    /* Safari and Chrome */
+    -moz-transform: scale(1, 1);
+    /* Firefox */
+    -ms-transform: scale(1, 1);
+    /* IE 9+ */
+    -o-transform: scale(1, 1);
+    /* Opera */
+  }
+  .calender-tooltip .calender-tooltip-bottom {
+    top: 135%;
+    left: 50%;
+    margin-left: -60px;
+  }
+  .calender-tooltip .calender-tooltip-bottom::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #555 transparent;
+  }
+  .calender-tooltip:hover .calender-tooltiptext {
+    visibility: visible;
+    opacity: 1;
+    top: 117%;
+  }
+
+  .calender-tooltip .calender-tooltip--separator {
+    padding-bottom: 5px;
+    border-bottom: 1px solid #fff;
+    width: 70px;
+    margin: 0 auto 5px auto;
+  }
+
+
+  /* css code to remove the grid to give the militaristic feel */
+  .calendar__no-grid .calendar__table {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+  .calendar__no-grid .calendar__table{
+    border-spacing: 0px;
+  }
+  .calendar__no-grid tr td{
+    border: none !important;
+  }
+
+  .calendar__no-grid thead tr th{
+    border-bottom-width: 1px !important;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+  }
+
+  .calendar__disable-dropdown .calendar__heading {
+    margin: 0;
+  }
+
+  .calendar__disable-dropdown.calendar__no-grid .calendar--button {
+    border: none !important;
+  }
+
+  /* css code to restructure whhen dropdowns are removed */
+  .calendar__disable-dropdown.calendar__no-grid {
+    padding: 2px 8px 8px 8px;
+  }
+  .calendar__disable-dropdown .calendar__arrow-left {
+    position: absolute;
+    left: 0;
+    top: 2px;
+    height: 35px;
+    width: 42px;
+  }
+
+  .calendar__disable-dropdown.calendar__no-grid .calendar__arrow-left,
+  .calendar__disable-dropdown.calendar__no-grid .calendar__arrow-right {
+    top: 0;
+  }
+
+  .calendar__disable-dropdown .calendar__arrow-right {
+    position: absolute;
+    right: 0;
+    top: 2px;
+    height: 35px;
+    width: 42px;
+  }
+
+  .calendar__disable-dropdown .calendar__arrow-left .calendar--button {
+    border: none;
+    border-right: 1px solid #eceeef;
+  }
+
+  .calendar__disable-dropdown .calendar__arrow-right .calendar--button {
+    border: none;
+    border-left: 1px solid #eceeef;
+  }
+  `],
   host: {
     '(document:click)': 'closeAutocomplete($event)',
   }
 })
 export class CalendarComponent implements OnInit, OnChanges {
   @Input() uiSettings: IuiSettings = {
-    dateDisplayFormat: 'EEEE, MMM d, y',
-    gridLayout: true,
+    dateDisplayFormat: '',
+    gridLayout: false,
     disableYearMonthDropdown: false,
     verticalInputAlignment: false,
     disableTooltip: false,
-    monthToShow: 2,
-    fontSize: 14,
-    individualCalendarCellWidth: 48,
-    individualCalendarCellHeight: 32,
-    selectedCellColor: '#3dbfd3',
-    hoverCellColor: '#97f1ff'
+    monthToShow: 0,
+    fontSize: 0,
+    individualCalendarCellWidth: 0,
+    individualCalendarCellHeight: 0,
+    selectedCellColor: '',
+    hoverCellColor: ''
   };
   @Input() uiInputSettings: IuiInputSettings = {
-    fromDateWidth: '50%',
-    fromDatePlaceholder: 'From Date',
-    fromDateLabelText: 'Select From Date',
+    fromDateWidth: '',
+    fromDatePlaceholder: '',
+    fromDateLabelText: '',
     fromDateLabelHide: false,
-    fromDateMargin: '0',
-    toDateWidth: '50%',
-    toDatePlaceholder: 'To Date',
-    toDateLabelText: 'Select To Date',
+    fromDateMargin: '',
+    toDateWidth: '',
+    toDatePlaceholder: '',
+    toDateLabelText: '',
     toDateLabelHide: false,
-    toDateMargin: '0'
+    toDateMargin: ''
   };
   @Input() minDate?: any;                                             //In Format MM/DD/YYYY as string or a Date object or Date in millisecond; (STRICT) (Default is current system date)
   @Input() maxDate?: any;                                             //In Format MM/DD/YYYY as string or a Date object or Date in millisecond; (STRICT) (Default is 20 years from min date)
   @Input() defaultFromDate?: any;                                     //In Format MM/DD/YYYY as string or a Date object or Date in millisecond; (STRICT)
   @Input() defaultToDate?: any;                                       //In Format MM/DD/YYYY as string or a Date object or Date in millisecond; (STRICT)
-  @Input() enableRangeSelect?: boolean = true;                        //config for number of months to be visible in the UI Horizontally (Default: 1)
-  @Input() maximumDayInRange?: number = 10;                           //config to set maximum range to which the user can select.
+  @Input() enableRangeSelect?: boolean = true;                        //config to enable and disable date range selection (Default: true)
+  @Input() maximumDayInRange?: number = 0;                            //config to set maximum range to which the user can select.
   @Input() isExternalDataAvailable?: boolean = true;                  //config to be set true if any external data to be shown inside the calendar
   @Input() promiseData?: Observable<any>;                             //config to be used when 'isExternalDataAvailable' is set to true and the input should be an observable who returns data according to the format mentioned in doc.
   @Output()
@@ -160,7 +662,35 @@ export class CalendarComponent implements OnInit, OnChanges {
 	startDay: number = this.currentDay;
 	startMonth: number = this.currentMonth;
 	startYear: number = this.currentYear;
-	noOfCalenderView: any = [];
+  noOfCalenderView: any = [];
+
+  private uiInputSettingsDefault: IuiInputSettings  = {
+    fromDateWidth: '50%',
+    fromDatePlaceholder: 'From Date',
+    fromDateLabelText: 'Select From Date',
+    fromDateLabelHide: false,
+    fromDateMargin: '0',
+    toDateWidth: '50%',
+    toDatePlaceholder: 'To Date',
+    toDateLabelText: 'Select To Date',
+    toDateLabelHide: false,
+    toDateMargin: '0'
+  };
+
+  private uiSettingsDefault: IuiSettings = {
+    dateDisplayFormat: 'EEEE, MMM d, y',
+    gridLayout: false,
+    disableYearMonthDropdown: false,
+    verticalInputAlignment: false,
+    disableTooltip: false,
+    monthToShow: 2,
+    fontSize: 14,
+    individualCalendarCellWidth: 48,
+    individualCalendarCellHeight: 32,
+    selectedCellColor: '#3dbfd3',
+    hoverCellColor: '#97f1ff'
+  };
+
 	constructor(
     private _elmRef: ElementRef,
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -169,14 +699,17 @@ export class CalendarComponent implements OnInit, OnChanges {
     private _calendarService: CalendarService) {}
 
 	ngOnInit(): void {
+    //initializing user input values
+    this.uiSettings = this.setDefaultValues(this.uiSettings, this.uiSettingsDefault);
+    this.uiInputSettings = this.setDefaultValues(this.uiInputSettings, this.uiInputSettingsDefault);
     //check if monthTOShow should be equal or more then 1
-    if (this.uiSettings.monthToShow < 0) {
+    if (this.uiSettings.monthToShow < 1) {
       this.uiSettings.monthToShow = 1;
       console.warn('Minimum value for monthToShow should be equal or more then 1');
     }
 
     //below code to determine the optimal calender width
-    this.defaultCalenderWidth = (this.uiSettings.individualCalendarCellWidth * 7) + 10;
+    this.defaultCalenderWidth = (this.uiSettings.individualCalendarCellWidth * 7) + 25;
 
 		if (this.minDate) {
 			this.minDate = new Date(this.minDate);
@@ -266,7 +799,10 @@ export class CalendarComponent implements OnInit, OnChanges {
       }
       dayObject.isSelected = true;
       this.userDateSelected = dayObject;
-      let _tempDate: string = dayObject.year + '-' + (dayObject.month + 1) + '-' + dayObject.day;
+      let _tempDate: any = {};
+      _tempDate.date = dayObject.year + '-' + (dayObject.month + 1) + '-' + dayObject.day;
+      _tempDate.day = dayObject;
+      this.calenderHideFlag = true;
       this.dateCallback.emit(_tempDate);
     } else {
       if (this.fromTimeClicked) {
@@ -476,6 +1012,19 @@ export class CalendarComponent implements OnInit, OnChanges {
   }
 
   //private functions start
+  //function to set default values and retain user input values
+  private setDefaultValues(userValues: any, defaultValues: any): any {
+    let _settings: any = {};
+    let _keys: any = Object.keys(defaultValues);
+    _keys.forEach((key) => {
+      if (!userValues[key]) {
+        _settings[key] = defaultValues[key];
+      } else {
+        _settings[key] = userValues[key];
+      }
+    });
+    return _settings;
+  }
 
   // function to check if a date is a past date from current date.
   private isPastDate(day: number, month: number, year: number, startYear: number, startMonth: number, startDay: number): boolean {
@@ -732,10 +1281,9 @@ export class CalendarComponent implements OnInit, OnChanges {
     let elem: any = this._elmRef.nativeElement.querySelector('.js-calenderFromTime');
     if (elem) {
       let coords: any = this.getElemStyle(elem);
-      console.log(coords);
       if (this.uiSettings.verticalInputAlignment || !this.enableRangeSelect) {
         this.calenderPosition = {
-          'top': coords.height + 10,
+          'top': coords.height + + coords.paddingTop + coords.marginTop + 10,
           'left': coords.marginLeft + coords.paddingLeft
         };
       } else {

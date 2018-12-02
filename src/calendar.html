@@ -5,13 +5,13 @@
       <input type="text" readonly (click)="fromDateClicked()"  [value]="rangeSelected.from.date | date: uiSettings.dateDisplayFormat" class="calender--input" placeholder="{{uiInputSettings.fromDatePlaceholder}}"/>
     </div>
     <div class="calender__input js-calenderToTime" [ngStyle]="{'margin': uiInputSettings.toDateMargin,'width': uiInputSettings.toDateWidth}">
-      <label *ngIf="!uiInputSettings.toDateLabelHide">{{uiInputSettings.fromDateLabelText}}</label>
+      <label *ngIf="!uiInputSettings.toDateLabelHide">{{uiInputSettings.toDateLabelText}}</label>
       <input type="text" readonly (click)="toDateClicked()" class="calender--input" [value]="rangeSelected.to.date | date: uiSettings.dateDisplayFormat" placeholder="{{uiInputSettings.toDatePlaceholder}}"/>
     </div>
   </div>
   <div class="calender--input-wrapper calender--input-alignment" *ngIf="!enableRangeSelect">
     <div class="calender__input js-calenderFromTime">
-      <label *ngIf="!uiInputSettings.fromDateLabelHide">Select  Date</label>
+      <label *ngIf="!uiInputSettings.fromDateLabelHide">{{uiInputSettings.fromDateLabelText}}</label>
       <input type="text" readonly (click)="fromDateClicked()"  [value]="userDateSelected.dateInMillisecond | date: uiSettings.dateDisplayFormat" class="calender--input" placeholder="{{uiInputSettings.fromDatePlaceholder}}"/>
     </div>
   </div>
@@ -19,7 +19,7 @@
     <div class="container calendar__heading calendar--full-width">
       <div class="calendar--full-width">
         <div class="calendar__arrow-left">
-          <button type="button" [disabled]="(selectYearDropdown <= startYear) && (selectMonthDropdown === 0)" class="btn calendar--button" (click)='setPrevMonth()'><i></i></button>
+          <button type="button" [disabled]="(selectYearDropdown <= startYear) && (selectMonthDropdown === 0)" class="calendar--button" (click)='setPrevMonth()'><i></i></button>
         </div>
         <div class="calendar__month" *ngIf="!uiSettings.disableYearMonthDropdown">
           <div class="custom-select">
@@ -36,12 +36,12 @@
           </div>
         </div>
         <div class="calendar__arrow-right">
-            <button type="button" class="btn calendar--button" [disabled]="(selectYearDropdown >= maxYear) && (selectMonthDropdown === 11)" (click)='setNextMonth()'> <i></i></button>
+            <button type="button" class="calendar--button" [disabled]="(selectYearDropdown >= maxYear) && (selectMonthDropdown === 11)" (click)='setNextMonth()'> <i></i></button>
         </div>
       </div>
     </div>
-    <div class="calendar__container ">
-      <table class="table-bordered calendar__table calendar--full-width" *ngFor="let year of noOfCalenderView" [ngStyle]="{'width': ''+ individualCalendarWidth +'%','font-size': uiSettings.fontSize+'px'}">
+    <div class="calendar__container">
+      <table class="calendar__table calendar--full-width" *ngFor="let year of noOfCalenderView" [ngStyle]="{'width': ''+ individualCalendarWidth +'%','font-size': uiSettings.fontSize+'px'}">
         <thead>
           <tr>
             <th colspan="7" class="calendar__table--date">{{year | ng6CalendarDateFormat}}</th>

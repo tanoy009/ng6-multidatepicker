@@ -1,29 +1,280 @@
 ﻿<div class="row">
-    <div class="col-xs-12">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title">Demo</h3>
-            </div>
-            <div class="panel-body">
-                <!--<div class="well">
+  <div class="col-xs-12 col-md-6">
+  	<div class="panel panel-primary">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Example 1</h3>
+		  </div>
+		  <div class="panel-body">
+		  	<div class="well">
 		  		<p>Setting used:</p>
-		  		<code style="word-wrap: break-word;" [innerHTML]="getCodeHtml(userSettings7_1)"></code>
-		  	</div>-->
-                <div>
-                    <ng6multi-calendar
-
-                    (dateCallback)="dateCallback($event)"
-                    (externalDataCallback)="externalDataFetchCallback($event)"
-                    [promiseData]="ObservableObj"
-                    [defaultFromDate]="defaultFrom"
-                    [defaultToDate]="defaultTo"
-                    ></ng6multi-calendar>
-                </div>
-                <!--<div class="well" style="float: left;width: 100%;margin-top: 20px;">
+		  		<code>NONE (All default settings are used)</code>
+		  	</div>
+		  	<div>
+		    	<ng6multi-calendar (dateCallback)="dateCallback1($event)"></ng6multi-calendar>
+		    </div>
+		    <div class="well" style="float: left;width: 100%;margin-top: 20px;">
+		    	<p>Sample Output:</p>
+		    	<samp style="word-wrap: break-word;">{{componentData1}}</samp>
+		    </div>
+		  </div>
+		</div>
+  </div>
+  <div class="col-xs-12 col-md-6">
+  	<div class="panel panel-primary">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Example 2 (Using the calender as normal date picker)</h3>
+		  </div>
+		  <div class="panel-body">
+		  	<div class="well">
+		  		<p>Setting used:</p>
+		  		<code style="word-wrap: break-word;" [innerHTML]="getCodeHtml(userSettings2)"></code>
+		  	</div>
+		  	<div>
+          <ng6multi-calendar
+          [uiInputSettings] = "userSettings2.uiInputSettings"
+          [enableRangeSelect]="userSettings2.enableRangeSelect"
+          (dateCallback)="dateCallback2($event)">
+        </ng6multi-calendar>
+		    </div>
+		    <div class="well" style="float: left;width: 100%;margin-top: 20px;">
+		    	<p>Sample Output:</p>
+		    	<samp style="word-wrap: break-word;">{{componentData2}}</samp>
+		    </div>
+		  </div>
+		</div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-md-6">
+  	<div class="panel panel-primary">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Example 3 (Using with minDate and maxDate along with defaultMinDate and defaultMax Date in range selection)</h3>
+		  </div>
+		  <div class="panel-body">
+		  	<div class="well">
+		  		<p>Setting used:</p>
+		  		<code style="word-wrap: break-word;" [innerHTML]="getCodeHtml(userSettings3)"></code>
+		  	</div>
+		  	<div>
+          <ng6multi-calendar
+            [minDate] = "userSettings3.minDate"
+            [maxDate] = "userSettings3.maxDate"
+            [defaultFromDate] = "userSettings3.defaultFromDate"
+            [defaultToDate] = "userSettings3.defaultToDate"
+            (dateCallback)="dateCallback3($event)">
+          </ng6multi-calendar>
+		    </div>
+		    <div class="well" style="float: left;width: 100%;margin-top: 20px;">
+		    	<p>Sample Output:</p>
+		    	<samp style="word-wrap: break-word;">{{componentData3}}</samp>
+		    </div>
+		  </div>
+		</div>
+  </div>
+  <div class="col-xs-12 col-md-6">
+  	<div class="panel panel-primary">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Example 4 (Restrict user to select a max no. of days within range)</h3>
+		  </div>
+		  <div class="panel-body">
+		  	<div class="well">
+		  		<p>Setting used:</p>
+          <code style="word-wrap: break-word;" [innerHTML]="getCodeHtml(userSettings4)"></code>
+          <p>Above 'maximumDayInRange' is in days (15 means 15 days)</p>
+		  	</div>
+		  	<div>
+		    	<ng6multi-calendar
+            [maximumDayInRange] = "userSettings4.maximumDayInRange"
+            (dateCallback)="dateCallback4($event)">
+          </ng6multi-calendar>
+		    </div>
+		    <div class="well" style="float: left;width: 100%;margin-top: 20px;">
+		    	<p>Sample Output:</p>
+		    	<samp style="word-wrap: break-word;">{{componentData4}}</samp>
+		    </div>
+		  </div>
+		</div>
+  </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-md-6">
+  	  <div class="panel panel-primary">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Example 5 (activating grid UI layout for animalistic approach and also changing the date format)</h3>
+		  </div>
+		  <div class="panel-body">
+		  	<div class="well">
+		  		<p>Setting used:</p>
+		  		<code style="word-wrap: break-word;" [innerHTML]="getCodeHtml(userSettings5)"></code>
+		  	</div>
+		  	<div>
+          <ng6multi-calendar
+            [uiSettings] = "userSettings5.uiSettings"
+            (dateCallback)="dateCallback5($event)">
+          </ng6multi-calendar>
+		    </div>
+		    <div class="well" style="float: left;width: 100%;margin-top: 20px;">
+		    	<p>Sample Output:</p>
+		    	<samp style="word-wrap: break-word;">{{componentData5}}</samp>
+		    </div>
+		  </div>
+	  </div>
+    </div>
+	<div class="col-xs-12 col-md-6">
+  	  <div class="panel panel-primary">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Example 6 (Disable year and month dropdown select if not required and we can change the cell font size)</h3>
+		  </div>
+		  <div class="panel-body">
+		  	<div class="well">
+		  		<p>Setting used:</p>
+		  		<code style="word-wrap: break-word;" [innerHTML]="getCodeHtml(userSettings6)"></code>
+		  	</div>
+		  	<div>
+          <ng6multi-calendar
+            [uiSettings] = "userSettings6.uiSettings"
+            (dateCallback)="dateCallback6($event)">
+          </ng6multi-calendar>
+		    </div>
+		    <div class="well" style="float: left;width: 100%;margin-top: 20px;">
+		    	<p>Sample Output:</p>
+		    	<samp style="word-wrap: break-word;">{{componentData6}}</samp>
+		    </div>
+		  </div>
+	  </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-md-6">
+  	  <div class="panel panel-primary">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Example 7 (customizing the hover and selected cell color along with we can change the sell width and height)</h3>
+		  </div>
+		  <div class="panel-body">
+		  	<div class="well">
+		  		<p>Setting used:</p>
+		  		<code style="word-wrap: break-word;" [innerHTML]="getCodeHtml(userSettings7)"></code>
+		  	</div>
+		  	<div>
+          <ng6multi-calendar
+            [uiSettings] = "userSettings7.uiSettings"
+            (dateCallback)="dateCallback7($event)">
+          </ng6multi-calendar>
+		    </div>
+		    <div class="well" style="float: left;width: 100%;margin-top: 20px;">
 		    	<p>Sample Output:</p>
 		    	<samp style="word-wrap: break-word;">{{componentData7}}</samp>
-		    </div>-->
-            </div>
+		    </div>
+		  </div>
+	  </div>
+    </div>
+	<div class="col-xs-12 col-md-6">
+  	  <div class="panel panel-primary">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Example 8 (can change number of months to be viewed simultaneously in popup)</h3>
+		  </div>
+		  <div class="panel-body">
+		  	<div class="well">
+		  		<p>Setting used:</p>
+		  		<code style="word-wrap: break-word;" [innerHTML]="getCodeHtml(userSettings8)"></code>
+		  	</div>
+		  	<div>
+          <ng6multi-calendar
+            [uiSettings] = "userSettings8.uiSettings"
+            (dateCallback)="dateCallback8($event)">
+          </ng6multi-calendar>
+		    </div>
+		    <div class="well" style="float: left;width: 100%;margin-top: 20px;">
+		    	<p>Sample Output:</p>
+		    	<samp style="word-wrap: break-word;">{{componentData8}}</samp>
+		    </div>
+		  </div>
+	  </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-md-6">
+  	  <div class="panel panel-primary">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Example 9 (customizing the width of from date input box and to date input box. we can also give margin for the two input box if needed.)</h3>
+		  </div>
+		  <div class="panel-body">
+		  	<div class="well">
+		  		<p>Setting used:</p>
+		  		<code style="word-wrap: break-word;" [innerHTML]="getCodeHtml(userSettings9)"></code>
+		  	</div>
+		  	<div>
+          <ng6multi-calendar
+            [uiInputSettings] = "userSettings9.uiInputSettings"
+            (dateCallback)="dateCallback9($event)">
+          </ng6multi-calendar>
+		    </div>
+		    <div class="well" style="float: left;width: 100%;margin-top: 20px;">
+		    	<p>Sample Output:</p>
+		    	<samp style="word-wrap: break-word;">{{componentData9}}</samp>
+		    </div>
+		  </div>
+	  </div>
+    </div>
+	<div class="col-xs-12 col-md-6">
+  	  <div class="panel panel-primary">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Example 10 (The Input boxes can be stacked vertically)</h3>
+		  </div>
+		  <div class="panel-body">
+		  	<div class="well">
+		  		<p>Setting used:</p>
+		  		<code style="word-wrap: break-word;" [innerHTML]="getCodeHtml(userSettings10)"></code>
+		  	</div>
+		  	<div>
+          <ng6multi-calendar
+            [uiSettings] = "userSettings10.uiSettings"
+            [uiInputSettings] = "userSettings10.uiInputSettings"
+            (dateCallback)="dateCallback10($event)">
+          </ng6multi-calendar>
+		    </div>
+		    <div class="well" style="float: left;width: 100%;margin-top: 20px;">
+		    	<p>Sample Output:</p>
+		    	<samp style="word-wrap: break-word;">{{componentData10}}</samp>
+		    </div>
+		  </div>
+	  </div>
+    </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+  	  <div class="panel panel-primary">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Example 11 (Calendar can be fed with external data to show different data corresponds to each date...like an airline website calendar)</h3>
+		  </div>
+		  <div class="panel-body">
+		  	<div class="well">
+		  		<p>Setting used:</p>
+		  		<code style="word-wrap: break-word;" [innerHTML]="getCodeHtml(userSettings11)"></code>
+		  	</div>
+		  	<div>
+          <ng6multi-calendar
+            [uiSettings] = "userSettings11.uiSettings"
+            [uiInputSettings] = "userSettings11.uiInputSettings"
+            [isExternalDataAvailable]="userSettings11.isExternalDataAvailable"
+            [promiseData]="ObservableObj"
+            (dateCallback)="dateCallback11($event)"
+            (externalDataCallback)="externalDataFetchCallback($event)">
+          </ng6multi-calendar>
         </div>
+        <div class="well" style="float: left;width: 100%;margin-top: 20px;">
+		    	<p>External data sample input Format:</p>
+		    	<samp style="word-wrap: break-word;" [innerHTML]="getCodeHtml(externalDataInputFormat)"></samp>
+        </div>
+        <div class="well" style="float: left;width: 100%;margin-top: 20px;">
+            <p>Sample Output for ExternalDataFetchCallback:</p>
+            <samp style="word-wrap: break-word;">{{externalDataFetchComponentCallback}}</samp>
+          </div>
+		    <div class="well" style="float: left;width: 100%;margin-top: 20px;">
+		    	<p>Sample Output:</p>
+		    	<samp style="word-wrap: break-word;">{{componentData11}}</samp>
+		    </div>
+		  </div>
+	  </div>
     </div>
 </div>

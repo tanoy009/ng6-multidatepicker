@@ -1,10 +1,6 @@
-.calendar * {
-    font-family: sans-serif;
-}
-
 .calendar {
     background-color: #fff;
-    width: 50%;
+    width: 100%;
     min-width: 352px;
     position: relative;
 }
@@ -23,6 +19,7 @@
   background-color: #fff;
   padding: 10px 8px 8px 8px;
   position: absolute;
+  z-index: 99;
 }
 
 .calendar--button {
@@ -123,6 +120,7 @@
 .calendar__table td,
 .calendar__table th {
     padding: 9px 0;
+    text-align: center;
     vertical-align: top;
     border-top: 1px solid #eceeef;
 }
@@ -143,11 +141,6 @@
 .calendar__table thead th {
     vertical-align: bottom;
     border-bottom: 2px solid #eceeef;
-}
-
-.calendar .table-bordered thead td,
-.calendar .table-bordered thead th {
-    border-bottom-width: 2px;
 }
 
 .calendar__table th {
@@ -173,8 +166,8 @@
     border-color: inherit;
 }
 
-.calendar .table-bordered td,
-.calendar .table-bordered th {
+.calendar .calendar__table td,
+.calendar .calendar__table th {
     border: 1px solid #eceeef;
 }
 

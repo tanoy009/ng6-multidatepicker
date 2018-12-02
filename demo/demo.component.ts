@@ -1,13 +1,14 @@
 ﻿import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, observable } from 'rxjs';
+import { asElementData } from '@angular/core/src/view';
+import { sanitizeIdentifier } from '@angular/compiler';
 
 @Component({
-  selector: 'ng4multi-calendar-demoapp',
+  selector: 'ng6multi-calendar-demoapp',
   templateUrl: './demo/demo.component.html'
 })
 export class DemoComponent {
-  public defaultFrom: any = "";
-  public defaultTo: any = "";
+
 	public componentData1: any = '';
   public componentData2: any = '';
   public componentData3: any = '';
@@ -15,106 +16,160 @@ export class DemoComponent {
   public componentData5: any = '';
   public componentData6: any = '';
   public componentData7: any = '';
+  public componentData8: any = '';
+  public componentData9: any = '';
+  public componentData10: any = '';
+  public componentData11: any = '';
+  public externalDataFetchComponentCallback: any = '';
+  public externalDataInputFormat: any  = {
+    '11/03/2018': {
+      'key': 'price',
+      'value': '$600',
+      'additionalTooltipMsg': '<div>Any tooltip message per cell</div>',
+      'color': '#FD38AE'
+    },
+    '11/04/2018': {
+      'key': 'price',
+      'value': '$200',
+      'additionalTooltipMsg': '',
+      'color': '#FD38AE'
+    }
+  };
   public ObservableObj: Observable<any>;
   public userSettings2: any = {
-    showRecentSearch: false,
-    geoCountryRestriction: ['in'],
-    searchIconUrl: 'http://downloadicons.net/sites/default/files/identification-search-magnifying-glass-icon-73159.png'
+    enableRangeSelect: false,
+    uiInputSettings: {
+      'fromDateLabelText': 'Select Date',
+      'fromDatePlaceholder': 'Any custom placeholder Date'
+    }
   };
   public userSettings3: any = {
-    showCurrentLocation: false,
-    resOnSearchButtonClickOnly: true,
-    inputPlaceholderText: 'Type anything and you will get a location',
-    recentStorageName: 'componentData3'
+    'minDate': '11/04/2018',
+    'maxDate': '03/03/2019',
+    'defaultFromDate': '11/08/2018',
+    'defaultToDate': '12/12/2018'
   };
   public userSettings4: any = {
-    showSearchButton: false,
-    currentLocIconUrl: 'https://cdn4.iconfinder.com/data/icons/proglyphs-traveling/512/Current_Location-512.png',
-    locationIconUrl: 'http://www.myiconfinder.com/uploads/iconsets/369f997cef4f440c5394ed2ae6f8eecd.png',
-    recentStorageName: 'componentData4',
-    noOfRecentSearchSave: 8
+    'maximumDayInRange': 15
   };
   public userSettings5: any = {
-    geoCountryRestriction: ['in'],
-    geoTypes: ['establishment']
+    'uiSettings': {
+      gridLayout: true,
+      dateDisplayFormat: 'MMM d, y'
+    }
   };
   public userSettings6: any = {
-    geoLocation: [37.76999, -122.44696],
-    geoRadius: 5
+    'uiSettings': {
+      fontSize: 10,
+      disableYearMonthDropdown: true
+    }
   };
   public userSettings7: any = {
-    useGoogleGeoApi: false,
-    geoLocDetailServerUrl: 'https://www.simplymovein.com/api/v4/get-location',
-    geoPredictionServerUrl: 'https://www.simplymovein.com/api/v4/search-location',
-    geoLatLangServiceUrl: 'https://www.simplymovein.com/api/v4/geocode',
-    serverResponseListHierarchy: ['data', 'items'],
-    serverResponseatLangHierarchy: ['data'],
-    serverResponseDetailHierarchy: ['data'],
-    recentStorageName: 'componentData5'
+    'uiSettings': {
+      gridLayout: true,
+      individualCalendarCellWidth: 70,
+      individualCalendarCellHeight: 50,
+      selectedCellColor: '#3AA757',
+      hoverCellColor: '#7ed093'
+    }
   };
 
-  public userSettings7_1: any = {
-    useGoogleGeoApi: false,
-    geoLocDetailServerUrl: 'https://www.XXX.com/api/v4/get-location',
-    geoPredictionServerUrl: 'https://www.XXX.com/api/v4/search-location',
-    geoLatLangServiceUrl: 'https://www.XXX.com/api/v4/geocode',
-    serverResponseListHierarchy: ['data', 'items'],
-    serverResponseatLangHierarchy: ['data'],
-    serverResponseDetailHierarchy: ['data'],
-    recentStorageName: 'componentData5'
+  public userSettings8: any = {
+    'uiSettings': {
+      monthToShow: 1
+    }
   };
 
-  constructor() {
-    // this.test();
-    setTimeout(() => {
-      this.defaultFrom = "2018-12-31";
-      this.defaultTo = "";
-    }, 5000);
-  }
+  public userSettings9: any = {
+    'uiInputSettings': {
+      fromDateWidth: '40%',
+      toDateWidth: '40%',
+      fromDateMargin: '0 10px 0 0',
+      toDateMargin: '0 0 0 10px'
+    }
+  };
 
-  mockCalenderDataGenerator(year, noOfDays){
-    let _data = {};
-    for(let p = 0;p<year.length;p++) {
-      for(let i = 1;i<=12;i++) {
-        for(let j = 1;j<noOfDays;j++) {
-            let _date = new Date(i+'-'+j+'-'+year[p]).getTime();
-            _data[_date]= {
+  public userSettings10: any = {
+    'uiSettings': {
+      monthToShow: 1,
+      verticalInputAlignment: true
+    },
+    'uiInputSettings': {
+      fromDateMargin: '0 0 20px 0'
+    }
+  };
+
+  public userSettings11: any = {
+    'uiInputSettings': {
+      fromDateWidth: '40%',
+      toDateWidth: '40%',
+      fromDateMargin: '0 10px 0 0',
+      toDateMargin: '0 0 0 10px'
+    },
+    'uiSettings': {
+      fontSize: 12,
+      individualCalendarCellHeight: 38
+    },
+    isExternalDataAvailable: true,
+    promiseData: 'this.ObservableObj'
+  };
+
+  constructor() {}
+
+  mockCalenderDataGenerator(year: any, noOfDays: number): any {
+    let _data: any = {};
+    for (let p: number = 0; p < year.length; p++) {
+      for (let i: number = 1; i <= 12; i++) {
+        for (let j: number = 1; j < noOfDays; j++) {
+            let _dateStr: string = i + '-' + j + '-' + year[p];
+            let _date: any = new Date(_dateStr).getTime();
+            _data[_date] = {
                 'key': 'price',
-                'value': '$'+ Math.floor(Math.random() * 100) + 10,
-                'additionalTooltipMsg': '<div>This is</div><div>Test2</div>',
-                'color': j < 10 ? '#E62017'  : '#FD38AE'
-            }
+                'value': '$' + Math.floor(Math.random() * 100) + 10,
+                'additionalTooltipMsg': '<div>Any tooltip message</div>',
+                'color': j < 10 ? '#E62017' : '#FD38AE'
+            };
         }
       }
     }
     return _data;
   }
-  test(year) {
-    console.log("in test");
-    setTimeout(()=>{
-      console.log("after settimeout");
-      console.log(year);
+
+  fetchData(year: any): void {
+    //instate of setTimeout, any ajax call can be made
+    setTimeout(() => {
       this.ObservableObj = new Observable((observer) => {
 
         // observable execution
-        let _mockData = this.mockCalenderDataGenerator(year, 25);
-        console.log("after exe");
+        // instate of mock data actual ajax data with described format should be fed ack to the calendar component.
+        // data format
+        // THE OBJECT KEY can be any valid date string like(MM/DD/YYYY) or date in millisecond.
+        this.externalDataInputFormat = {
+          '11/03/2018': {
+            'key': 'price',
+            'value': '$600',
+            'additionalTooltipMsg': '<div>Any tooltip message per cell</div>',
+            'color': '#FD38AE'
+          },
+          '11/04/2018': {
+            'key': 'price',
+            'value': '$200',
+            'additionalTooltipMsg': '',
+            'color': '#FD38AE'
+          }
+        };
+        let _mockData: any = this.mockCalenderDataGenerator(year, 25);
         observer.next(_mockData);
         observer.complete();
-    })
-    }, 3000);
+    });
+    }, 1000);
   }
 
-  externalDataFetchCallback(event: any) {
-    console.log("in fetch");
+  externalDataFetchCallback(event: any): void {
+    console.log('in external data fetch');
     console.log(event);
-    this.test(event.yearDataNeeded);
-
-  }
-
-  dateCallback(event: any) {
-    console.log('date selected');
-    console.log(event);
+    this.fetchData(event.yearDataNeeded);
+    this.externalDataFetchComponentCallback = JSON.stringify(event);
   }
 
   getCodeHtml(data: any): any {
@@ -124,31 +179,59 @@ export class DemoComponent {
     _temp = _temp.split('}').join('<br>}');
     return _temp;
   }
-  autoCompleteCallback1(data: any): any {
+
+  dateCallback1(data: any): void {
+    console.log(data);
     this.componentData1 = JSON.stringify(data);
   }
 
-  autoCompleteCallback2(data: any): any {
+  dateCallback2(data: any): void {
+    console.log(data);
     this.componentData2 = JSON.stringify(data);
   }
 
-  autoCompleteCallback3(data: any): any {
+  dateCallback3(data: any): void {
+    console.log(data);
     this.componentData3 = JSON.stringify(data);
   }
 
-  autoCompleteCallback4(data: any): any {
+  dateCallback4(data: any): void {
+    console.log(data);
     this.componentData4 = JSON.stringify(data);
   }
 
-  autoCompleteCallback5(data: any): any {
+  dateCallback5(data: any): void {
+    console.log(data);
     this.componentData5 = JSON.stringify(data);
   }
 
-  autoCompleteCallback6(data: any): any {
+  dateCallback6(data: any): void {
+    console.log(data);
     this.componentData6 = JSON.stringify(data);
   }
-  autoCompleteCallback7(data: any): any {
+
+  dateCallback7(data: any): void {
+    console.log(data);
     this.componentData7 = JSON.stringify(data);
   }
 
+  dateCallback8(data: any): void {
+    console.log(data);
+    this.componentData8 = JSON.stringify(data);
+  }
+
+  dateCallback9(data: any): void {
+    console.log(data);
+    this.componentData9 = JSON.stringify(data);
+  }
+
+  dateCallback10(data: any): void {
+    console.log(data);
+    this.componentData10 = JSON.stringify(data);
+  }
+
+  dateCallback11(data: any): void {
+    console.log(data);
+    this.componentData11 = JSON.stringify(data);
+  }
 }
