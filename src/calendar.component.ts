@@ -57,7 +57,7 @@ export interface IdateObject {
 export class CalendarComponent implements OnInit, OnChanges {
   @Input() uiSettings: IuiSettings = {
     dateDisplayFormat: 'EEEE, MMM d, y',
-    gridLayout: false,
+    gridLayout: true,
     disableYearMonthDropdown: false,
     verticalInputAlignment: false,
     disableTooltip: false,

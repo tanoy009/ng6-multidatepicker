@@ -1,14 +1,14 @@
-﻿# Angular 4 compatible google autocomplete
-[![Build Status](https://travis-ci.org/tanoy009/ng4-calendar.svg?branch=master)](https://travis-ci.org/tanoy009/ng4-calendar)
-[![codecov](https://codecov.io/gh/tanoy009/ng4-calendar/branch/master/graph/badge.svg)](https://codecov.io/gh/tanoy009/ng4-calendar)
-[![npm version](https://badge.fury.io/js/ng4-calendar.svg)](http://badge.fury.io/js/ng4-calendar)
-[![devDependency Status](https://david-dm.org/tanoy009/ng4-calendar/dev-status.svg)](https://david-dm.org/tanoy009/ng4-calendar?type=dev)
-[![GitHub issues](https://img.shields.io/github/issues/tanoy009/ng4-calendar.svg)](https://github.com/tanoy009/ng4-calendar/issues)
-[![GitHub stars](https://img.shields.io/github/stars/tanoy009/ng4-calendar.svg)](https://github.com/tanoy009/ng4-calendar/stargazers)
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/tanoy009/ng4-calendar/master/LICENSE)
+﻿# Angular 6 compatible Normal Calender along with Date range Calender with support of external data view
+[![Build Status](https://travis-ci.org/tanoy009/ng6-calendar.svg?branch=master)](https://travis-ci.org/tanoy009/ng6-calendar)
+[![codecov](https://codecov.io/gh/tanoy009/ng6-calendar/branch/master/graph/badge.svg)](https://codecov.io/gh/tanoy009/ng6-calendar)
+[![npm version](https://badge.fury.io/js/ng6-calendar.svg)](http://badge.fury.io/js/ng6-calendar)
+[![devDependency Status](https://david-dm.org/tanoy009/ng6-calendar/dev-status.svg)](https://david-dm.org/tanoy009/ng6-calendar?type=dev)
+[![GitHub issues](https://img.shields.io/github/issues/tanoy009/ng6-calendar.svg)](https://github.com/tanoy009/ng6-calendar/issues)
+[![GitHub stars](https://img.shields.io/github/stars/tanoy009/ng6-calendar.svg)](https://github.com/tanoy009/ng6-calendar/stargazers)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/tanoy009/ng6-calendar/master/LICENSE)
 
 ## Demo
-https://tanoy009.github.io/ng4-calendar/
+https://tanoy009.github.io/ng6-calendar/
 
 ## Test Case.
 In Pipeline will be updated in a while.
@@ -23,24 +23,24 @@ In Pipeline will be updated in a while.
 
 ## About
 
-angular 4 compatible google autocomplete with server side api support and AOT enabled
+angular 6 compatible multipurpose calendar with external data integration support and AOT enabled
 
 ## Installation
 
 Install through npm:
 ```
-npm install --save ng4-calendar
+npm install --save ng6-calendar
 ```
 
 Then include in your apps module:
 
 ```typescript
 import { Component, NgModule } from '@angular/core';
-import { Ng4CalendarModule } from 'ng4-calendar';
+import { Ng6CalendarModule } from 'ng6-calendar';
 
 @NgModule({
   imports: [
-    Ng4CalendarModule.forRoot()
+    Ng6CalendarModule.forRoot()
   ]
 })
 export class MyModule {}
@@ -51,10 +51,11 @@ Finally use in one of your apps components:
 import { Component } from '@angular/core';
 
 @Component({
-  template: '<ng4geo-autocomplete (componentCallback)="autoCompleteCallback1($event)"></ng4geo-autocomplete>'
+  template: '<ng6multi-calendar (dateCallback)="dateCallback($event)"></ng6multi-calendar>'
 })
 export class MyComponent {
-	autoCompleteCallback1(selectedData:any) {
+	dateCallback(selectedDate: any) {
+    //selectedDate will be a object which will give the selected date.
 		//do any necessery stuff.
 	}
 }
@@ -62,60 +63,106 @@ export class MyComponent {
 
 List of settings that can be used to configure the module (all config. are optional):
 ```typescript
-	{
-    geoPredictionServerUrl?: string;      //should be a server url which returns list of places upon input query (GET request)
-    geoLatLangServiceUrl?: string;        //should be a server url which returns place object upon lat and lon. (GET request)
-    geoLocDetailServerUrl?: string;       //should be a server url which returns place details upon placeID received by 'geoPredictionServerUrl' (GET request)
-    geoCountryRestriction?: any;          //should be an array of country code where search should be restricted like ['in', 'us', 'pr', 'vi', 'gu', 'mp'] *(Default: 'no restriction')*
-    geoTypes?: any;                       //should be an array of Place types defined by [Google api](https://developers.google.com/places/web-service/autocomplete#place_types).
-    geoLocation?: any;                    //should be an array in the format [latitude,longitude]. This feature will not work if country restriction is implimented.
-    geoRadius?: number;                   //should be a number and should only be used with 'geoLocation'.
-    serverResponseListHierarchy?: any;    //should be an array of key from where 'geoPredictionServer' data should be extracted. (see Example.)
-    serverResponseatLangHierarchy?: any;  //should be an array of key from where 'geoLatLangService' data should be extracted. (see Example.)
-    serverResponseDetailHierarchy?: any;  //should be an array of key from where 'geoLocDetailSerice' data should be extracted. (see Example.)
-    resOnSearchButtonClickOnly?: boolean; //when output should be emmited when search button clicked only.
-    useGoogleGeoApi?: boolean;            //should set to 'false' when server urls to be used instade of google api. *(Default: true)*
-    inputPlaceholderText?: string;        //Input Placeholder text can be changed *(Default: 'Enter Area Name')*
-    inputString?: string;                 //Default selected input like prefefined address. *(Default: ''). See Example 3 in Demo after 10 sec*
-    showSearchButton?: boolean;           //Search button to be visible or not. *(Default: true)*
-    showRecentSearch?: boolean;           //Recent search to be saved & shown to user or not. *(Default: true)*
-    showCurrentLocation?: boolean;        //current location option to be visible or not. *(Default: true)*
-    recentStorageName?: string;           //Recent seraches are saved in browser localsorage. The key value which is used by the module to save can be changed. *(Default: 'recentSearches')*
-    noOfRecentSearchSave?: number;        //Number of recent user entry to be saved . *(Default: 5)*
-    currentLocIconUrl?: string;           //Current location icon can be changed *(Should be an image url or svg url)*
-    searchIconUrl?: string;               //Search icon can be changed *(Should be an image url or svg url)*
-    locationIconUrl?: string;             //Genetal Location icon can be changed *(Should be an image or svg url)*
-	}
+	uiSettings = {
+    dateDisplayFormat: 'EEEE, MMM d, y',  //Any kind of date format will work i.e supported my native angular date filter pipe
+    gridLayout: true,                     //Grid layout for the calendar (Default: true)
+    disableYearMonthDropdown: false,      //We can disable the Year and month dropdown according to the need (Default: false)
+    verticalInputAlignment: false,        //Vertical alignment of the two input box (Default: false)
+    disableTooltip: false,                //Flag to disable the cell tooltip
+    monthToShow: 2,                       //Number of months to be visible in the UI (Default: 2)
+    fontSize: 14,                         //Font size of the date (Default: 14)
+    individualCalendarCellWidth: 48,      //config to change the cell width
+    individualCalendarCellHeight: 32,     //config to change the cell height
+    selectedCellColor: '#3dbfd3',         //config to change the user selected cell color
+    hoverCellColor: '#97f1ff'             //config to change the cell hover color
+  };
+
+  uiInputSettings = {
+    fromDateWidth: '50%',                 //config to change the from date input box width
+    fromDatePlaceholder: 'From Date',     //config to change the from date placeholder text (Default: 'From Date')
+    fromDateLabelText: 'Select From Date',//config to change the from date label text (Default: 'Select From Date')
+    fromDateLabelHide: false,             //config to hide the from date label (Default: false)
+    fromDateMargin: '0',                  //config to set the from date input box margin if required (Default: 0)
+    toDateWidth: '50%',                   //config to change the to date input box width
+    toDatePlaceholder: 'To Date',         //config to change the to date placeholder text (Default: 'To Date')
+    toDateLabelText: 'Select To Date',    //config to change the to date label text (Default: 'Select To Date')
+    toDateLabelHide: false,               //config to hide the to date label (Default: false)
+    toDateMargin: '0'                     //config to set the to date input box margin if required (Default: 0)
+  };
+
+  minDate                                 //In Format MM/DD/YYYY as string or a Date object or Date in millisecond; (STRICT) (Default is current system date)
+  maxDate                                 //In Format MM/DD/YYYY as string or a Date object or Date in millisecond; (STRICT) (Default is 20 years from min date)
+  defaultFromDate                         //In Format MM/DD/YYYY as string or a Date object or Date in millisecond; (STRICT)
+  defaultToDate                           //In Format MM/DD/YYYY as string or a Date object or Date in millisecond; (STRICT)
+  enableRangeSelect = true;               //config to enable and disable range select (Default: true)
+  maximumDayInRange = 0;                  //config to set maximum range to which the user can select. (Default: 0 i.e no limit)
+  isExternalDataAvailable = true;         //config to be set true if any external data to be shown inside the calendar
+  promiseData?: Observable<any>;          //config to be used when 'isExternalDataAvailable' is set to true and the input should be an observable who returns data according to the format mentioned in doc.
+  @Output()
+  dateCallback                            //this output method will be called whenever user selects a date i.e either from date or to date or both.
+  @Output()
+  externalDataCallback                    //this output method will be called whenever a any month or year is changed to get the fresh latest data to be shown in the calender.
 ```
-#### NOTE: Component settings can also be altered after component initialization. Please follow the below method to change.
+#### NOTE: 'defaultFromDate' and 'defaultToDate' can only be changed after component initialization. 'promiseData' should always return an observable. Please see the below code for better understanding.
 ```typescript
-this.userSettings: any = {
-  inputPlaceholderText: 'This is the placeholder text doring component initialization'
-}
+  import { Component } from '@angular/core';
+  import { Observable } from 'rxjs';
 
-this.userSettings['inputPlaceholderText'] = 'This is the placeholder text after doing some external operation after some time';
-this.userSettings = Object.assign({},this.userSettings) //Very Important Line to add after modifying settings.
+  @Component({
+    template: '<ng6multi-calendar [promiseData]="ObservableObj" (externalDataCallback)="externalDataFetchCallback($event)"></ng6multi-calendar>'
+  })
+  export class MyComponent {
+    public ObservableObj: Observable<any>;
+
+    returnFetchedData(data: any) {
+      this.ObservableObj = new Observable((observer) => {
+        // observable execution
+        observer.next(data);
+        observer.complete();
+      });
+    }
+
+    externalDataFetchCallback(event: any) {
+      //function to be called by component whenever there is a month or year change occurs.
+      console.log(event);
+      //after fetching necessary data via ajax call, call the below function
+      //the format of the data should be in the below format(STRICT). Key should be any valid date string or date in millisecond.
+      data = {
+        '12/02/2019': {
+          'key': 'price',                                     
+          'value': '$500',                                    //value to be shown inside the calendar date cell
+          'additionalTooltipMsg': 'any html or normal text',  //tooltip text to be shown while hover.(It can be any html with inline css or any normal text)
+          'color': '#E62017'                                  //specific value color for the value. (default: black)
+        },
+        '13/02/2019': {
+          'key': 'price',
+          'value': '$200',
+          'additionalTooltipMsg' : '',
+          'color': '#E62017'
+        }
+      }
+      this.returnFetchedData(data);
+    }
+  }
 ```
 
-#### NOTE: 
-'geoTypes' can be used for multiple Place Types like `['(regions)', '(cities)']` OR `['(regions)', 'establishment', 'geocode']`. This will make individual api call for each Place Types to google to fetch lists and then it will merge the resuts with uniqueness.To know avalable Place Types please refer [Google api](https://developers.google.com/places/web-service/autocomplete#place_types).USE THIS FEATURE CAREFULLY<br/><br/>
 ### You may also find it useful to view the [demo source](https://github.com/tanoy009/ng4-geoautocomplete/blob/master/demo/demo.component.ts).
 
 ### You can use it with system js as well
 
-`'ng4-geoautocomplete': 'npm:ng4-geoautocomplete/bundles/ng4-geoautocomplete.umd.js'`
+`'ng6-calendar': 'npm:ng6-calendar/bundles/ng6-calendar.umd.js'`
 
 ### Usage without a module bundler
 ```
-<script src="node_modules/ng4-geoautocomplete/bundles/ng4-geoautocomplete.umd.js"></script>
+<script src="node_modules/ng6-calendar/bundles/ng6-calendar.umd.js"></script>
 <script>
-    // everything is exported ng4Geoautocomplete namespace
+    // everything is exported ng6Calendar namespace
 </script>
 ```
 
 ## Documentation
 All documentation is auto-generated from the source via [compodoc](https://compodoc.github.io/compodoc/) and can be viewed here:
-https://tanoy009.github.io/ng4-geoautocomplete/docs/
+https://tanoy009.github.io/ng6-calendar/docs/
 
 ## Development
 
