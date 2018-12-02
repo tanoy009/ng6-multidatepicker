@@ -1,14 +1,14 @@
 ﻿# Angular 6 compatible Normal Calender along with Date range Calender with support of external data view
-[![Build Status](https://travis-ci.org/tanoy009/ng6-calendar.svg?branch=master)](https://travis-ci.org/tanoy009/ng6-calendar)
-[![codecov](https://codecov.io/gh/tanoy009/ng6-calendar/branch/master/graph/badge.svg)](https://codecov.io/gh/tanoy009/ng6-calendar)
-[![npm version](https://badge.fury.io/js/ng6-calendar.svg)](http://badge.fury.io/js/ng6-calendar)
-[![devDependency Status](https://david-dm.org/tanoy009/ng6-calendar/dev-status.svg)](https://david-dm.org/tanoy009/ng6-calendar?type=dev)
-[![GitHub issues](https://img.shields.io/github/issues/tanoy009/ng6-calendar.svg)](https://github.com/tanoy009/ng6-calendar/issues)
-[![GitHub stars](https://img.shields.io/github/stars/tanoy009/ng6-calendar.svg)](https://github.com/tanoy009/ng6-calendar/stargazers)
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/tanoy009/ng6-calendar/master/LICENSE)
+[![Build Status](https://travis-ci.org/tanoy009/ng6-multicalendar.svg?branch=master)](https://travis-ci.org/tanoy009/ng6-multicalendar)
+[![codecov](https://codecov.io/gh/tanoy009/ng6-multicalendar/branch/master/graph/badge.svg)](https://codecov.io/gh/tanoy009/ng6-multicalendar)
+[![npm version](https://badge.fury.io/js/ng6-multicalendar.svg)](http://badge.fury.io/js/ng6-multicalendar)
+[![devDependency Status](https://david-dm.org/tanoy009/ng6-multicalendar/dev-status.svg)](https://david-dm.org/tanoy009/ng6-multicalendar?type=dev)
+[![GitHub issues](https://img.shields.io/github/issues/tanoy009/ng6-multicalendar.svg)](https://github.com/tanoy009/ng6-multicalendar/issues)
+[![GitHub stars](https://img.shields.io/github/stars/tanoy009/ng6-multicalendar.svg)](https://github.com/tanoy009/ng6-multicalendar/stargazers)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/tanoy009/ng6-multicalendar/master/LICENSE)
 
 ## Demo
-https://tanoy009.github.io/ng6-calendar/
+https://tanoy009.github.io/ng6-multicalendar/
 
 ## Test Case.
 In Pipeline will be updated in a while.
@@ -29,14 +29,14 @@ angular 6 compatible multipurpose calendar with external data integration suppor
 
 Install through npm:
 ```
-npm install --save ng6-calendar
+npm install --save ng6-multicalendar
 ```
 
 Then include in your apps module:
 
 ```typescript
 import { Component, NgModule } from '@angular/core';
-import { Ng6CalendarModule } from 'ng6-calendar';
+import { Ng6CalendarModule } from 'ng6-multicalendar';
 
 @NgModule({
   imports: [
@@ -150,11 +150,11 @@ List of settings that can be used to configure the module (all config. are optio
 
 ### You can use it with system js as well
 
-`'ng6-calendar': 'npm:ng6-calendar/bundles/ng6-calendar.umd.js'`
+`'ng6-multicalendar': 'npm:ng6-multicalendar/bundles/ng6-multicalendar.umd.js'`
 
 ### Usage without a module bundler
 ```
-<script src="node_modules/ng6-calendar/bundles/ng6-calendar.umd.js"></script>
+<script src="node_modules/ng6-multicalendar/bundles/ng6-multicalendar.umd.js"></script>
 <script>
     // everything is exported ng6Calendar namespace
 </script>
@@ -162,7 +162,7 @@ List of settings that can be used to configure the module (all config. are optio
 
 ## Documentation
 All documentation is auto-generated from the source via [compodoc](https://compodoc.github.io/compodoc/) and can be viewed here:
-https://tanoy009.github.io/ng6-calendar/docs/
+https://tanoy009.github.io/ng6-multicalendar/docs/
 
 ## Development
 
