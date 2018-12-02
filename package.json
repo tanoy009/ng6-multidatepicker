@@ -28,13 +28,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tanoy009/ng6-calendar.git"
+    "url": "git+https://github.com/tanoy009/ng6-multicalendar.git"
   },
   "keywords": [
     "angular6",
     "angular",
     "calendar",
+    "angular date range",
     "date range",
+    "angular 5 calendar",
+    "calendar date range",
     "angular calendar",
     "angular 6 calendar",
     "angular 6 date range",
@@ -48,9 +51,9 @@
   "author": "tanoy kumar maity",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tanoy009/ng6-calendar/issues"
+    "url": "https://github.com/tanoy009/ng6-multicalendar/issues"
   },
-  "homepage": "https://github.com/tanoy009/ng6-calendar#readme",
+  "homepage": "https://github.com/tanoy009/ng6-multicalendar#readme",
   "devDependencies": {
     "@angular/common": "^6.1.10",
     "@angular/compiler": "^6.1.10",
