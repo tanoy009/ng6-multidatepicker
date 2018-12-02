@@ -75,11 +75,10 @@ export class DemoComponent {
   mockCalenderDataGenerator(year, noOfDays){
     let _data = {};
     for(let p = 0;p<year.length;p++) {
-      _data[year[p]] = {};
-      for(let i = 0;i<12;i++) {
-        _data[year[p]][i] = {};
+      for(let i = 1;i<=12;i++) {
         for(let j = 1;j<noOfDays;j++) {
-            _data[year[p]][i][j]= {
+            let _date = new Date(i+'-'+j+'-'+year[p]).getTime();
+            _data[_date]= {
                 'key': 'price',
                 'value': '$'+ Math.floor(Math.random() * 100) + 10,
                 'additionalTooltipMsg': '<div>This is</div><div>Test2</div>',
