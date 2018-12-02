@@ -30,7 +30,7 @@ export class CalendarService {
           _keyNum = key;
         }
         let _date: any = new Date(_keyNum);
-        if (_date != 'Invalid Date') {
+        if (_date + '' !== 'Invalid Date') {
           _date = new Date(_date.setHours(0, 0, 0, 0));
           let _year: number = _date.getFullYear();
           let _month: number = _date.getMonth();
