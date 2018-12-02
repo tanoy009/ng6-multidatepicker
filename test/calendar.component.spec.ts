@@ -6,7 +6,7 @@ import {
 import { expect } from 'chai';
 import { Ng6CalendarModule } from '../src';
 
-describe('ng6-calendar component', () => {
+describe('ng6-multicalendar component', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
