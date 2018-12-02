@@ -1,5 +1,5 @@
 {
-  "name": "ng6-calendar",
+  "name": "ng6-multicalendar",
   "version": "0.0.1",
   "description": "angular 6 compatible multi purpose date range calendar and AOT enabled",
   "main": "./bundles/ng6-multicalendar.umd.js",
