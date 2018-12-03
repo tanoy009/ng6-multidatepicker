@@ -48,7 +48,7 @@ export interface IdateObject {
 
 @Component({
   selector: 'ng6multi-datepicker',
-  templateUrl: `<div class="calendar">
+  template: `<div class="calendar">
   <div class="calender--input-wrapper" [ngClass]="{'calender--input-alignment': uiSettings.verticalInputAlignment}" *ngIf="enableRangeSelect">
     <div class="calender__input js-calenderFromTime" [ngStyle]="{'margin': uiInputSettings.fromDateMargin,'width': uiInputSettings.fromDateWidth}">
       <label *ngIf="!uiInputSettings.fromDateLabelHide">{{uiInputSettings.fromDateLabelText}}</label>
@@ -1337,7 +1337,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
       _coords.paddingTop = parseFloat(styles.getPropertyValue('padding-top'));
       _coords.paddingBottom = parseFloat(styles.getPropertyValue('padding-bottom'));
       return _coords;
-    }else {
+    } else {
       return {};
     }
   }
