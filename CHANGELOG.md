@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.0.3"></a>
+## [0.0.3](https://github.com/tanoy009/ng6-multidatepicker/compare/v0.0.2...v0.0.3) (2018-12-03)
+
+
+### Bug Fixes
+
+* fixed the demo file css ([6ececba](https://github.com/tanoy009/ng6-multidatepicker/commit/6ececba))
+* Internet explorer datepicker not opeing issue is resolved ([b735b55](https://github.com/tanoy009/ng6-multidatepicker/commit/b735b55))
+
+
+
 <a name="0.0.2"></a>
 ## [0.0.2](https://github.com/tanoy009/ng6-multidatepicker/compare/v0.0.1...v0.0.2) (2018-12-02)
 
