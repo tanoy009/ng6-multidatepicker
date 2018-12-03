@@ -41,7 +41,7 @@
       </div>
     </div>
     <div class="calendar__container">
-      <table class="calendar__table calendar--full-width" *ngFor="let year of noOfCalenderView" [ngStyle]="{'width': ''+ individualCalendarWidth +'%','font-size': uiSettings.fontSize+'px'}">
+      <table class="calendar__table" *ngFor="let year of noOfCalenderView" [ngStyle]="{'width': 'calc('+ (100/uiSettings.monthToShow) + '% - ' + (uiSettings.gridLayout ? 0 : 10) + 'px)','font-size': uiSettings.fontSize+'px'}">
         <thead>
           <tr>
             <th colspan="7" class="calendar__table--date">{{year | ng6CalendarDateFormat}}</th>
