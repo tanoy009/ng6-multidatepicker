@@ -1,4 +1,4 @@
-﻿# Angular 6 compatible Normal Datepciker along with Date range Calender with support of external data view
+﻿# Angular 6 compatible Normal Datepicker along with Date range Calender with support of external data view
 [![Build Status](https://travis-ci.org/tanoy009/ng6-multidatepicker.svg?branch=master)](https://travis-ci.org/tanoy009/ng6-multidatepicker)
 [![codecov](https://codecov.io/gh/tanoy009/ng6-multidatepicker/branch/master/graph/badge.svg)](https://codecov.io/gh/tanoy009/ng6-multidatepicker)
 [![npm version](https://badge.fury.io/js/ng6-multidatepicker.svg)](http://badge.fury.io/js/ng6-multidatepicker)
@@ -23,7 +23,7 @@ In Pipeline will be updated in a while.
 
 ## About
 
-angular 6 compatible multipurpose calendar with external data integration support and AOT enabled
+angular 6 compatible multipurpose date picker with external data integration support and AOT enabled
 
 ## Installation
 
