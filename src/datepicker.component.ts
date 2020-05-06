@@ -794,14 +794,26 @@ export class DatepickerComponent implements OnInit, OnChanges {
   //function to be called when any date is clicked my user.
 	public dateClicked(dayObject: any): void {
     if (!this.enableRangeSelect) {
+      let isDateSelect = this.userDateSelected.isSelected;
+      if(!this.defaultFromDate && !this.defaultToDate && !this.userDateSelected.isSelected){
+        isDateSelect = true;
+      }
       if (!dayObject.isSelected && this.userDateSelected.isSelected) {
         this.userDateSelected.isSelected = false;
       }
-      dayObject.isSelected = true;
-      this.userDateSelected = dayObject;
+      
       let _tempDate: any = {};
       _tempDate.date = dayObject.year + '-' + (dayObject.month + 1) + '-' + dayObject.day;
       _tempDate.day = dayObject;
+      let offset = new Date().getTimezoneOffset();
+      if(Math.sign(offset)==1 && navigator.userAgent.search("Firefox") > -1 && isDateSelect) {
+        let nextday = new Date(_tempDate.date);
+        nextday.setDate(new Date(_tempDate.date).getDate()+1);
+        _tempDate.nextDate = nextday.getUTCFullYear()+ '-' +  (nextday.getUTCMonth() + 1) + '-' + nextday.getUTCDate();
+        dayObject.dateInMillisecond = new Date(_tempDate.nextDate).getTime();
+      }
+      this.userDateSelected = dayObject;
+      dayObject.isSelected = true;
       this.calenderHideFlag = true;
       this.dateCallback.emit(_tempDate);
     } else {
